@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>PUREE</title>
+  <link rel="stylesheet" href="main.css" />
+</head>
+
+<body style="background-color:white;color:black">
+
+  <div id="main-header-container">
+    <h1>PUREE</h1>
+    <h2>Password-based Uniform-Random-Equivalent Encryption</h2>
+
+    <ul class="main-menu">
+      <li><a class="ui-corner-all" href="index.html">Introduction</a></li>
+      <li class="menu-current ui-corner-all">Quick Start</li>
+      <li><a class="ui-corner-all" href="documentation.html">Documentation</a></li>
+    </ul>
+
+  </div>
+
+  <div id="main-content-container">
+    <p>
+      This section shows you how to encrypt a device (i.e., disk or partition) with PUREE. In my examples, I'll be
+      encrypting the device named `/dev/sdx`.
+    </p>
+  </div>
+
+  <div id="main-footer">
+    <div>Last Modified: 2020-06-03</div>
+    <div>Jay Sullivan</div>
+  </div>
+
+</body>
+
+</html>
+
+<!--
+> WARNING: Beware that, by encrypting a device with PUREE, you will be wiping all data from the device.  So, if you already have data on your device, and wish to encrypt it, then you'll need to copy it elsewhere, then encrypt your device, then copy it back.
+
+To download the PUREE software suite (into the current directory):
+
+    git clone https://github.com/notfed/puree puree
+    cd puree
+
+
+First, you'll need to *format* your device with PUREE.  You'll first need to choose a cipher suite to use: for now, we'll use `disk-aes256-cbc-essiv-sha256`.
+
+    sudo ./puree format /dev/sdx disk-aes256-cbc-essiv-sha256
+
+You will be prompted for a password. For now, type "`0password`". (You'll be asked to enter it twice.)
+
+> NOTE: PUREE has a unique requirement in that it requires you to prefix your password with a "parameter char"; see "parameter char" section below for an explanation.
+
+If this succeeded, your device is now encrypted.
+
+Because the device is now encrypted, you can't directly access the device; its data is undecipherable.  The solution is to `map` a new virtual device:
+
+    sudo ./puree map /dev/sdx virtual-sdx
+
+(You will be prompted to enter the disk's password.)
+
+This will create a new, "virtual", `/dev/mapper/virtual-sdx` device, which acts as an encryption layer, transparently encrypting/decrypting any writes/reads before they arrive on the `/dev/sdx` device.
+
+You can now treat `/dev/mapper/virtual-sdx` as you would a normal disk device.  For example:
+
+    sudo mkfs.ext4 /dev/mapper/virtual-sdx
+    sudo mount /dev/mapper/virtual-sdx /mnt
+
+To unmap the device, run:
+
+    sudo ./puree unmap virtual-sdx
+
+#### Choosing a parameter char
+
+PUREE encrypts disks using the [Argon2](https://en.m.wikipedia.org/wiki/Argon2) password-key derivation function.  This means it will calculate a derived key from a password. However, Argon2 requires a few parameters:
+
+1. Parallelism: the maximum number of parallel CPU threads
+2. Memory: the amount of RAM required
+3. Iterations: multiplier on amount of time required
+
+One goal of PUREE is that the disk must be indistinguishable from random data. This means these parameters can not be stored on the disk.  
+
+The novel idea behind PUREE is to store these parameters *in the password*.  As a result, every PUREE password must be prefixed with a special character, called the "parameter char". Current valid values are:
+
+|**Parameter Char**|Parallelism|Memory|Iterations|
+|`0`|1|75MiB|1|
+|`1`|1|250MiB|1|
+|`2`|4|250MiB|4|
+|`3`|1|1GiB|1|
+|`4`|4|1GiB|4|
+|`5`|1|4GiB|1|
+|`6`|4|4GiB|4|
+|`7`|1|16GiB|1|
+|`8`|4|16GiB|4|
+
+As CPU and RAM become cheaper, more parameter chars will be added to this table.
+
+> NOTE: These values are currently non-final, and may be changed before PUREE 1.0.0.
+
+# PUREE Disk Format
+The exact format of a PUREE disk depends on a few important (boolean) conditionals:
+
+- `CipherHasParams` - The chosen cipher suite has tunable parameters
+- `IncludeAntiForensicsLayer` - Include an anti-forensics layer
+- `DeriveKey` - Derive the disk key from the password (instead of a csprng)
+- `DontStretchPassword` - Don't stretch the password hash, just hash once
+
+-->

@@ -13,9 +13,9 @@
     <h2>Password-based Uniform-Random-Equivalent Encryption</h2>
 
     <ul class="main-menu">
-      <li class="menu-current ui-corner-all">Introduction</li>
-      <li><a class="ui-corner-all" href="windows7-texlive.html">Quick Start</a></li>
-      <li><a class="ui-corner-all" href="windows7-texlive.html">Documentation</a></li>
+      <li class="menu-current ui-corner-all" >Introduction</li>
+      <li><a class="ui-corner-all" href="quick-start.html">Quick Start</a></li>
+      <li><a class="ui-corner-all" href="documentation.html">Documentation</a></li>
     </ul>
 
   </div>
@@ -24,20 +24,26 @@
 
 
     <style type="text/css">
-      ol.letter-list { list-style-type: lower-alpha; }
-  </style>
-  
-  <code>PUREE</code> is a full-disk encryption header format (and tool, currently only supported on Linux) which gives you the ability to perform full-disk encryption in a way that ensures that it is infeasible for someone to determine which of the following is true:
-  
-  <ol class="letter-list">
-  <li>Your disk is encrypted, or</li>
-  <li>Your disk has been "wiped" with random bits.</li>
-  </ol>
-  
-  For example, the most common disk encryption tool used on Linux systems is <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">LUKS (Linux Unified Key Setup)</a>.  If you were to look at the first 512 bytes of a disk encrypted with LUKS, you would see something like this:
+      ol.letter-list {
+        list-style-type: lower-alpha;
+      }
+    </style>
 
-<div style="text-align:center">
-  <pre style="font: 10pt monospace;background-color:rgb(238, 238, 255);margin: 1em 4em;display:inline-block">
+    <code>PUREE</code> is a full-disk encryption header format (and tool, currently only supported on Linux) which gives
+    you the ability to perform full-disk encryption in a way that ensures that it is infeasible for someone to determine
+    which of the following is true:
+
+    <ol class="letter-list">
+      <li>Your disk is encrypted, or</li>
+      <li>Your disk has been "wiped" with random bits.</li>
+    </ol>
+
+    For example, the most common disk encryption tool used on Linux systems is <a
+      href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">LUKS (Linux Unified Key Setup)</a>. If you were to
+    look at the first 512 bytes of a disk encrypted with LUKS, you would see something like this:
+
+    <div style="text-align:center">
+      <pre style="font: 10pt monospace;background-color:rgb(238, 238, 255);margin: 1em 4em;display:inline-block">
 4c554b53babe00016165730000000000  |LUKS....aes.....|
 00000000000000000000000000000000  |................|
 00000000000000007874732d706c6169  |........xts-plai|
@@ -71,18 +77,22 @@ bc884d1b0002bf4b3363623964393330  |..M....K3cb9d930|
 00000000000000000000050800000fa0  |................|
 0000dead000000000000000000000000  |................|
 </pre>
-</div>
-  
-<p>
-  Clearly, it is trivial to detect that a disk is encrypted with LUKS.  In fact, this isn't just a problem with LUKS; it is a problem with (as it seems) all most encryption tools.  
-</p>
-  
-<p>
-  PUREE solves this problem be guaranteeing that all data on the disk, including the header, looks completely random.  Since it has long been common practice to <a href="https://en.wikipedia.org/wiki/Gutmann_method">wipe disks by overwriting with random data</a>, PUREE introduces the plausibility that disk may actually have been wiped and therefore contain no information. For example:
-</p>
+    </div>
 
-  <div style="text-align:center">
-<pre style="font: 10pt monospace;background-color:rgb(238, 238, 255);margin: 1em 4em;display:inline-block">
+    <p>
+      Clearly, it is trivial to detect that a disk is encrypted with LUKS. In fact, this isn't just a problem with LUKS;
+      it is a problem with (as it seems) all most encryption tools.
+    </p>
+
+    <p>
+      PUREE solves this problem be guaranteeing that all data on the disk, including the header, looks completely
+      random. Since it has long been common practice to <a href="https://en.wikipedia.org/wiki/Gutmann_method">wipe
+        disks by overwriting with random data</a>, PUREE introduces the plausibility that disk may actually have been
+      wiped and therefore contain no information. For example:
+    </p>
+
+    <div style="text-align:center">
+      <pre style="font: 10pt monospace;background-color:rgb(238, 238, 255);margin: 1em 4em;display:inline-block">
 5428898ff0f38e9d4437e36c3fbed0bc  |T(......D7.l?...|
 8a56fbe09c2ffd50fc25f420b6edc43e  |.V.../.P.%. ...>|
 f67d40635168013bafb9598f5a34e6c1  |.}@cQh.;..Y.Z4..|
@@ -116,168 +126,23 @@ c0848e2f04c9b848f689f10dceb11b73  |.../...H.......s|
 d669f7f48ba09590e49472440196c1ab  |.i........rD....|
 deab098fa0fc74c0f43a8501d16a1101  |......t..:...j..|
 </pre>
-  </div>
-  
-  <p>
-  Despite being indistinguishable from random to an eavesdropper, there is in fact a structure to the disk layout—only observable if the password is known—which is explained in the white paper.
-  </p>
+    </div>
 
-  <p>To try out PUREE, move on to <a href="quick-start.html">Quick Start</a>.
-  
+    <p>
+      Despite being indistinguishable from random to an eavesdropper, there is in fact a structure to the disk
+      layout—only observable if the password is known—which is explained in the white paper.
+    </p>
+
+    <p>To try out PUREE, move on to <a href="quick-start.html">Quick Start</a>.
+
 
   </div>
 
   <div id="main-footer">
-    <div>Last Modified: 2012-05-23</div>
+    <div>Last Modified: 2020-06-03</div>
     <div>Jay Sullivan</div>
   </div>
 
 </body>
 
 </html>
-
-
-  
-### PUREE Quick Start
-  
-This section shows you how to encrypt a device (i.e., disk or partition) with PUREE. In my examples, I'll be encrypting the device named `/dev/sdx`.
-
-> WARNING: Beware that, by encrypting a device with PUREE, you will be wiping all data from the device.  So, if you already have data on your device, and wish to encrypt it, then you'll need to copy it elsewhere, then encrypt your device, then copy it back.
-
-To download the PUREE software suite (into the current directory):
-
-    git clone https://github.com/notfed/puree puree
-    cd puree
-
-
-First, you'll need to *format* your device with PUREE.  You'll first need to choose a cipher suite to use: for now, we'll use `disk-aes256-cbc-essiv-sha256`.
-
-    sudo ./puree format /dev/sdx disk-aes256-cbc-essiv-sha256
-
-You will be prompted for a password. For now, type "`0password`". (You'll be asked to enter it twice.)
-
-> NOTE: PUREE has a unique requirement in that it requires you to prefix your password with a "parameter char"; see "parameter char" section below for an explanation.
-
-If this succeeded, your device is now encrypted.
-
-Because the device is now encrypted, you can't directly access the device; its data is undecipherable.  The solution is to `map` a new virtual device:
-
-    sudo ./puree map /dev/sdx virtual-sdx
-
-(You will be prompted to enter the disk's password.)
-
-This will create a new, "virtual", `/dev/mapper/virtual-sdx` device, which acts as an encryption layer, transparently encrypting/decrypting any writes/reads before they arrive on the `/dev/sdx` device.
-
-You can now treat `/dev/mapper/virtual-sdx` as you would a normal disk device.  For example:
-
-    sudo mkfs.ext4 /dev/mapper/virtual-sdx
-    sudo mount /dev/mapper/virtual-sdx /mnt
-
-To unmap the device, run:
-
-    sudo ./puree unmap virtual-sdx
-
-#### Choosing a parameter char
-
-PUREE encrypts disks using the [Argon2](https://en.m.wikipedia.org/wiki/Argon2) password-key derivation function.  This means it will calculate a derived key from a password. However, Argon2 requires a few parameters:
-
-1. Parallelism: the maximum number of parallel CPU threads
-2. Memory: the amount of RAM required
-3. Iterations: multiplier on amount of time required
-
-One goal of PUREE is that the disk must be indistinguishable from random data. This means these parameters can not be stored on the disk.  
-
-The novel idea behind PUREE is to store these parameters *in the password*.  As a result, every PUREE password must be prefixed with a special character, called the "parameter char". Current valid values are:
-
-|**Parameter Char**|Parallelism|Memory|Iterations|
-|`0`|1|75MiB|1|
-|`1`|1|250MiB|1|
-|`2`|4|250MiB|4|
-|`3`|1|1GiB|1|
-|`4`|4|1GiB|4|
-|`5`|1|4GiB|1|
-|`6`|4|4GiB|4|
-|`7`|1|16GiB|1|
-|`8`|4|16GiB|4|
-
-As CPU and RAM become cheaper, more parameter chars will be added to this table.
-
-> NOTE: These values are currently non-final, and may be changed before PUREE 1.0.0.
-
-# PUREE Disk Format
-The exact format of a PUREE disk depends on a few important (boolean) conditionals:
-
-- `CipherHasParams` - The chosen cipher suite has tunable parameters
-- `IncludeAntiForensicsLayer` - Include an anti-forensics layer
-- `DeriveKey` - Derive the disk key from the password (instead of a csprng)
-- `DontStretchPassword` - Don't stretch the password hash, just hash once
-
-The disk header format is: (in pseudo-code)
-
-{% highlight rust %}
-struct Header {
-    byte[32] salt
-    byte[16] box_1_auth
-    byte[16|20] box_1  /* i.e., either 16 or 20 bytes */
-    Slot[0..64] slots  /* i.e., anywhere from 0 through 64 Slots*/
-    CipherParameters[0|1] cipherParameters
-    byte[0..511] padding
-    byte[0|4096..2^20-1] antiForensics
-}
-struct Slot {
-    byte[24] slot_nonce
-    byte[16] slot_auth
-    byte[32] slot
-}
-struct CipherParameters {
-    byte[16] box_2_auth
-    byte[...] box_2
-}
-{% endhighlight %}
-
-Where:
-- `byte[x]` means "x bytes in size"
-- `a|b` means "either `a` or `b`"
-- `a..b` means "anywhere from `a` to `b` (inclusive)"
-- `...` means "any number"
-
-The high-level algorithm to format the disk is: (in pseudo-code)
-
-{% highlight rust %}
-byte[16] cipher_suite_guid = /* ... */;
-byte[4]  cipher_suite_param_size = /* ... */;
-
-byte[32] pwhash     = DontStretchPassword ? H(password) 
-                                          : argon2id(password, salt)
-byte[32] salt       = IncludeAntiForensicsLayer 
-                          ? H(antiForensics)
-                          : DeriveKey ? H(plaintext_hash) : csprng(32)
-byte[16] box_1_auth
-if CipherHasParams:
-    byte[20] box_1 = box(box_key, 1) { cipher_suite_guid; cipher_suite_param_size; }
-else:
-    byte[16] box_1 = box(box_key, 1) { cipher_suite_guid; }
-if CipherHasParams:
-    byte[16] box_2_auth
-    byte[...] box_2     = box(box_key,2) { ... }
-
-if IncludeAntiForensicsLayer:
-    byte[4096..2^20] antiForensics = expand(DeriveKey ? H(plaintext_hash) 
-                                                       : csprng(32))
-{% endhighlight %}
-
-PUREE also supports multiple password slots:
-
-- `--slots n` - Use `n` password slots.
-
-{% highlight rust %}
-/* Slots: TODO */
-if !UseNumberOfSlots[0]:
-    byte[32] slot_key   = IncludeAntiForensicsLayer ? H(pwhash or H(antiForensics))
-                                                    : pwhash
-    byte[16] slot_auth  = auth(slot_key) { /* entire header ciphertext except 
-                                                  [a] this auth, or [b] all auths */ } 
-    byte[32] slot       = box(slot_key) { box_key }
-
-    byte[32] box_key    = (slot_key) OR (csprng(32))
-{% endhighlight %}
