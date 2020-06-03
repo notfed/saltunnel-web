@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LaTeX Quick Start</title>
+  <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+
+  <div id="main-header-container">
+    <h1>LaTeX<sup class="workinprogress">A Visual Quick Start</sup></h1>
+    <h2>Creating a Minimal Sample Document</h2>
+
+    <ul class="main-menu">
+      <li><a class="ui-corner-all" href="index.html">Overview</a></li>
+      <li><a class="ui-corner-all" href="windows7-texlive.html">TeX Live</a></li>
+      <li><a class="ui-corner-all" href="windows7-texmaker.html">Texmaker</a></li>
+      <li class="menu-current ui-corner-all">Sample Document</li>
+    </ul>
+
+  </div>
+
+  <div id="main-content-container">
+  <div class="explain">
+  <p>Once you have installed TeX Live and Texmaker, you just need to type (or copy and paste) your LaTeX source code into Texmaker and press F1.  The following is a minimal list of steps to compile LaTeX source code into a PDF document.</p>
+
+  <h3>1) Run Texmaker</h3>
+  <div class="tut-step">
+    <p>A link to Texmaker should be in your start menu and a shortcut should be on your desktop:</p>
+    <table class="tut-image">
+        <tr>
+          <td width="20%"><img src="images/texmaker-startmenu.png"/></td>
+          <td width="20%"><img src="images/texmaker-desktop-shortcut.png"/></td>
+        </tr>
+    </table>
+    <p>Run Texmaker.  You should see the following:</p>
+    <p class="tut-image"><img src="images/texmaker-step1.png"/></p>
+  </div>
+
+  <h3>2) Create a New LaTeX Document</h3>
+  <div class="tut-step">
+    <p class="tut-desc">Before creating a new document, you'll first want to create a new folder to store it in.  Create a new folder called "<em>hello world latex</em>" on your desktop:</p>
+    <p class="tut-image"><img src="images/helloworldlatexfolder.png"/></p>
+    <p class="tut-desc">Note: it is important to create a separate folder like this. When you compile your LaTeX source code, a PDF document, along with several other files, will be produced in the same folder as the LaTeX document.</p>
+    <p class="tut-desc">Now, go back into Texmaker.  To create a new document, choose <em>File</em> &rarr; <em>New</em>:</p>
+    <p class="tut-image"><img src="images/texmaker-app-menu1.png"/></p>
+    <p class="tut-desc">Notice how the title of the window changed to "<em>Document : untitled1</em>". You can now edit this document (the right half of the window), but we'll save it first.</p>
+    <p class="tut-image"><img src="images/texmaker-app-menu2.png"/></p>
+    <p class="tut-desc">Let's save this empty document.  Go to the menu and choose <em>File</em> &rarr; <em>Save As</em>:</p>
+    <p class="tut-image"><img src="images/texmaker-app-menu3.png"/></p>
+    <p class="tut-desc">Navigate into the "<em>hello world latex</em>" folder on your desktop. Then, enter "<em>helloworld.tex</em>" as your <em>File name</em> and click <em>Save</em>:</p>
+    <p class="tut-image"><img src="images/texmaker-app-menu4.png"/></p>
+    <p class="tut-desc">Your document is now saved and you are ready to start compiling!</p>
+  </div>
+
+  <h3>3) Write a Minimal Sample Document</h3>
+  <div class="tut-step">
+    <p class="tut-desc">The following code represents a very minimal LaTeX article:</p>
+<pre class="console">
+  \documentclass{article}
+  \title{Sample Document}
+  \author{John Smith}
+  \date{May 23, 2012}
+  \begin{document}
+  \maketitle
+  Hello World!
+  \end{document}
+</pre>
+    <p class="tut-desc">Copy and paste this code into the editor (on the right-hand side of the window):</p>
+    <p class="tut-image"><img src="images/texmaker-samplecode.png"/></p>
+  </div>
+
+  <h3>4) Compile into a PDF</h3>
+  <div class="tut-step">
+    <p class="tut-desc">To see the resulting document, press <span class="code">F1</span>. If your document is free from syntax errors, this will compile your document into a PDF file and preview it in the configured document viewer.  The sample document PDF should look like this:</p>
+    <p class="tut-image"><img src="images/sampledocument-wide.png"/></p>
+  </div>
+
+  </div>
+  <div id="main-footer">
+    <div>Last Modified: 2012-05-23</div>
+    <div>Jay Sullivan</div>
+  </div>
+
+</body>
+</html>

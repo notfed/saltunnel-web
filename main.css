@@ -1,0 +1,227 @@
+@import "jquery.ui.all.css";
+.center { text-align:center; }
+
+
+
+/* Special tweaks */
+.workinprogress { color:red; font-size:12pt; }
+body { margin:0; padding:0; }
+.explain li
+{
+}
+.explain a
+{
+  text-decoration:none;
+}
+
+#main-footer 
+{
+margin-top:2em;
+display:block;
+border-top:1px dashed black;
+}
+
+
+/* ------------------------------------- 
+             Header 
+ --------------------------------------- */
+div#main-header-container h1
+{
+    font:bold 82pt serif;
+    margin:0; padding:0;
+    text-align:center;
+    clear:both;
+}
+div#main-header-container h2
+{
+    position:relative;
+    top:-0.5em;
+    margin:0; padding:0;
+    text-align:center;
+    clear:both;
+    overflow:auto;
+}
+div#main-content-container ul
+{
+  margin-left:4em;
+}
+/* ------------------------------------- 
+             Menu
+ --------------------------------------- */
+ul.main-menu 
+{
+    margin:0; padding:0;
+    margin-bottom:1em;
+    font:32pt menu;
+    list-style-type:none;
+    text-align:center;
+    display:block;
+    text-align:center;
+}
+
+.menu-first
+{
+    margin-left:auto;
+    margin-right:0.5em;
+}
+.menu-last
+{
+    margin-left:0.5em;
+    margin-right:auto;
+    clear:right;
+}
+ul.main-menu li.menu-current
+{
+    padding:.2em;
+    position:relative;
+}
+ul.main-menu li:not(.menu-current) a:hover 
+{
+ /*
+    position:relative;
+    top:-4pt;
+ */
+}
+ul.main-menu li
+{
+    display:inline;
+}
+ul.main-menu li.menu-current
+{
+    cursor:default;
+}
+ul.main-menu li a
+{
+    text-decoration:none;
+    padding: .2em;
+    color:#fff;
+    background-color:#115;
+    border:4px solid transparent;
+}
+ul.main-menu li a:hover,
+ul.main-menu li.menu-current
+{
+    color:#fff;
+    background-color:#11f;;
+}
+ul.main-menu li.menu-current
+{
+    border:4px dashed #fff;
+}
+/* ------------------------------------- 
+             Content
+ --------------------------------------- */
+
+div#main-content-container
+{
+    font:16pt serif;
+    display:block;
+    margin-left:5em;
+    margin-right:3em;
+}
+.tut-step
+{ 
+    margin-left:4em; 
+    display:block;
+    clear:left;
+}
+.tut-desc
+{
+}
+.tut-image
+{
+    margin-left:2em;
+}
+.code
+{
+    font-family:monospace;
+    font-size:12pt;
+}
+
+
+/* ------------------------------------- 
+             Form
+ --------------------------------------- */
+#login-form fieldset
+{
+   border:1px solid black;
+   display:inline;
+}
+#login-form legend
+{
+  padding:5px 6px;
+}
+#login-form label
+{
+    width:6em;
+    float:left;
+    text-align:right;
+    margin-right:0.5em;
+    display:block;
+}
+#login-form .inputs input
+{
+  color:black;
+  border:1px solid black;
+  margin-top:4px;
+}
+#login-form .submit
+{
+    margin-bottom:0px;
+    text-align:center;
+}
+#login-form .submit input
+{
+}
+.form-content 
+{
+    text-align:center;
+}
+.form-content .unregistered
+{
+    font-size:12pt;
+}
+/* ------------------------------------- 
+             Console style
+ --------------------------------------- */
+.console
+{
+  display:block;
+  font-family:monospace;
+  <!-- background-color:#111155; -->
+  border:8px solid black;
+  -moz-border-radius: 16px/*{cornerRadius}*/; 
+  -webkit-border-radius: 16px/*{cornerRadius}*/; 
+  border-radius: 16px/*{cornerRadius}*/;
+  padding:0.5em 1em;
+}
+/* ------------------------------------- 
+             Tutorial List
+ --------------------------------------- */
+.tutorial .category
+{
+    border:5px solid black;
+    padding:1em;
+}
+.tutorial
+{
+  padding:0;margin:0;
+}
+.tutorial p
+{
+}
+ol.tutorial li
+{
+  border-top:1px dashed black;
+  padding-bottom:1em;
+  list-style-type:none;
+}
+ol.tutorial li
+{
+  border-top:none !important;
+}
+ol.tutorial .cmd
+{
+  text-decoration:none;
+  font-weight:bold;
+}
