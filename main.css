@@ -57,6 +57,9 @@ div#main-content-container ul
 /* ------------------------------------- 
              Menu
  --------------------------------------- */
+.ui-corner-all {
+    display: inline-block;
+}
 ul.main-menu 
 {
     margin:0; padding:0;
@@ -93,7 +96,7 @@ ul.main-menu li:not(.menu-current) a:hover
 }
 ul.main-menu li
 {
-    display:inline;
+    display:inline-block;
 }
 ul.main-menu li.menu-current
 {
