@@ -23,10 +23,150 @@
     </div>
 
     <div id="main-content-container">
+      
+<style>
+.command {
+    margin:2em;
+    padding:0.5em;
+    color:black;
+    display:block;
+    border-radius:0.5em;
+    background-color:rgb(238, 238, 255);
+    border:5px solid #444;
+}
+</style>
+      
+<h2>How do I install <code>puree</code>?</h2>
       <p>
-        This section shows you how to encrypt a device (i.e., disk or partition) with PUREE. In my examples, I'll be
-        encrypting the device named `/dev/sdx`.
+      While the PUREE disk format is platform-independent, the <code>puree</code> command-line tool currently only supports Linux.
       </p>
+      <p>
+      In addition, the following system libraries must be installed:
+      </p>
+<code class="command">
+    # Debian, Ubuntu:<br/>
+    sudo apt install python3 python3-pip python3-setuptools libsodium23<br/><br/>
+    # Red Hat, Fedora:<br/>
+    sudo dnf install python3 python3-pip python3-setuptools libsodium
+</code>
+      
+      Install <code>puree</code> with:
+      
+<code class="command">
+          sudo python3 -m pip install puree pysodium argon2-cffi
+</code>
+      <p>
+      (Usually, using <code>sudo</code> to perform <code>pip install</code> is not recommended. However, because device-mapper usually requires root access, and because disk devices usually require root access, <code>puree</code> is usually invoked with <code>sudo</code>—therefore we install with <code>sudo</code> because, otherwise, <code>sudo</code> tends to hide userspace-installed Python packages from the <code>PATH</code>.)
+      </p>
+      
+<h2>How do I use it?</h2>
+<p>
+Let's go through the complete from encrypting a device with PUREE all the way to mounting it .
+</p>
+<p>
+(WARNING: By encrypting a device with PUREE, you will be wiping all data from the disk.)
+</p>
+<p>
+We'll encrypt device <code>/dev/sdz</code> with <code>AES-256</code> in <code>XTS</code> mode.
+</p>
+<p>
+Then, format the disk with PUREE:
+</p>      
+      
+<code class="command">
+          sudo puree format /dev/sdz aes256-xts-plain64
+</code>
+      (You will be prompted for a password. PUREE will require you to prefix your password with a "parameter character"; see the "<i>Choosing a parameter character</i>" section below for an explanation.)
+      
+      Your device should now be encrypted.
+      
+      Next, you'll need to "map" your encrypted disk device to a new virtual device:
+      <code class="command">
+          sudo puree map /dev/sdz /dev/mapper/sdz
+        </code>
+      (You will be prompted to enter the disk's password.)
+      
+      The virtual device should now be available at <code>/dev/mapper/sdz</code>; you can now treat <code>/dev/mapper/sdz</code> as you would a normal disk device.  
+      
+      For example, to format it with a filesystem, then mount it:
+      <code class="command">
+          <div>sudo mkfs.ext4 /dev/mapper/sdz</div>
+          <div>sudo mount /dev/mapper/sdz /mnt</div>
+      </code>
+      You now have an encrypted fileystem available at <code>/mnt</code>.
+      
+      To unmap the device, run:
+      <code class="command">
+          sudo puree unmap /dev/mapper/sdz
+        </code>
+      To prove to yourself that the disk is encrypted, try running `sudo hexdump -C /dev/sdz | less`, and you'll see something like this:
+    
+<div style="text-align:center">
+<pre class="hexdump">
+3ac41e42da074126fb9d4c6a01a15f56  |...B..A&..Lj.._V|
+c71c6c473a891a0777af909a4efb1a8f  |..lG:...w...N...|
+72fc3eac1766db1d55d2c0cd14a666bd  |r.>..f..U.....f.|
+5592d610bbc3ad8146eb2bf7cec566b6  |U.......F.+...f.|
+8c44df178868323dd175458d4327d107  |.D...h2=.uE.C'..|
+6dbf3af811083156dd3bb23583826b62  |m.:...1V.;.5..kb|
+fad3a02d48acebc57b79ce68ec9e68f1  |...-H...{y.h..h.|
+4c5daf931a2bb71face7f417ca627d05  |L]...+.......b}.|
+39568ce65ec12f5838c056d3d682d728  |9V..^./X8.V....(|
+446df278d823fee0ff2f4c04434b5f5e  |Dm.x.#.../L.CK_^|
+bc42583055c455cdb4439385c59bf3fd  |.BX0U.U..C......|
+62019305a5f38ce912c0c13876f31f1b  |b..........8v...|
+8e67545ae3abf95a2247fc0c5c55558c  |.gTZ...Z"G....U.|
+01c623448fbb35df80b313da63269760  |..#D..5.....c&.`|
+4dfbd88dd32a1179e4038d7c3c4412eb  |M....*.y...|&lt;D..|
+c856ecfe15e5c4a5d7f12165628c05b8  |.V........!eb...|
+6c00f7e2dcb39dcedff67d1de9551eaa  |l.........}..U..|
+d9e24fd60f42b399ed18adec4de8912a  |..O..B......M..*|
+2316e4131712a0a7044b96d3154d1b2f  |#........K...M./|
+67a623656f15d733f4541fc78781bfd3  |g.#eo..3.T......|
+</pre>
+</div>
+      
+      Now that you've done that, be aware that, to truly keep your disk indistinguishable from random, you should first complete wipe the disk with random data:
+      
+      <code class="command">
+          sudo puree destroy /dev/sdz
+      </code>
+      
+      Then repeat the previous steps. (Previously, we left this step out as it tends to take a while.)
+      
+<h2>Choosing a parameter char</h2>
+      
+      <code>puree</code> encrypts disks in such a way that its primary key is derived using the <a href="https://en.m.wikipedia.org/wiki/Argon2">Argon2</a> password-key derivation function.  In order to calculate a derived key from a password, however, a few parameters are required:
+      
+      <ol>
+      <li>Parallelism: the maximum number of parallel CPU threads</li>
+      <li>Memory: the amount of RAM required</li>
+      <li>Iterations: multiplier on amount of time required</li>
+      </ol>
+      
+      One goal of PUREE is that the disk must be indistinguishable from random data. This means these parameters can not be stored on the disk.  Instead, PUREE stores these parameters in the password.  Every PUREE password must be prefixed with a special character, called the "parameter char". Current valid values are:
+
+      <ul>
+      <li><code>'b' => parallelism: 1,  memory: 75MiB,  iterations: 1</code></li>
+      <li><code>'c' => parallelism: 1,  memory: 250MiB, iterations: 1</code></li>
+      <li><code>'d' => parallelism: 4,  memory: 250MiB, iterations: 4</code></li>
+      <li><code>'e' => parallelism: 1,  memory: 1GiB,   iterations: 1</code></li>
+      <li><code>'f' => parallelism: 4,  memory: 1GiB,   iterations: 4</code></li>
+      <li><code>'g' => parallelism: 1,  memory: 4GiB,   iterations: 1</code></li>
+      <li><code>'h' => parallelism: 4,  memory: 4GiB,   iterations: 4</code></li>
+      <li><code>'i' => parallelism: 1,  memory: 16GiB,  iterations: 1</code></li>
+      <li><code>'j' => parallelism: 4,  memory: 16GiB,  iterations: 4</code></li>
+      </ul>
+      
+      Also:
+      
+      <ul>
+      <li><code>'a' => simply hash the salt and password with blake2b</code></li>
+      </ul>
+      
+      As CPU and RAM become cheaper, more parameter chars will be added to this table.
+      
+
     </div>
 
     <div id="main-footer">
@@ -49,25 +189,25 @@ To download the PUREE software suite (into the current directory):
     cd puree
 
 
-First, you'll need to *format* your device with PUREE.  You'll first need to choose a cipher suite to use: for now, we'll use `disk-aes256-cbc-essiv-sha256`.
+First, you'll need to *format* your device with PUREE.  You'll first need to choose a cipher suite to use: for now, we'll use <code>disk-aes256-cbc-essiv-sha256</code>.
 
     sudo ./puree format /dev/sdx disk-aes256-cbc-essiv-sha256
 
-You will be prompted for a password. For now, type "`0password`". (You'll be asked to enter it twice.)
+You will be prompted for a password. For now, type "<code>0password</code>". (You'll be asked to enter it twice.)
 
 > NOTE: PUREE has a unique requirement in that it requires you to prefix your password with a "parameter char"; see "parameter char" section below for an explanation.
 
 If this succeeded, your device is now encrypted.
 
-Because the device is now encrypted, you can't directly access the device; its data is undecipherable.  The solution is to `map` a new virtual device:
+Because the device is now encrypted, you can't directly access the device; its data is undecipherable.  The solution is to <code>map</code> a new virtual device:
 
     sudo ./puree map /dev/sdx virtual-sdx
 
 (You will be prompted to enter the disk's password.)
 
-This will create a new, "virtual", `/dev/mapper/virtual-sdx` device, which acts as an encryption layer, transparently encrypting/decrypting any writes/reads before they arrive on the `/dev/sdx` device.
+This will create a new, "virtual", <code>/dev/mapper/virtual-sdx</code> device, which acts as an encryption layer, transparently encrypting/decrypting any writes/reads before they arrive on the <code>/dev/sdx</code> device.
 
-You can now treat `/dev/mapper/virtual-sdx` as you would a normal disk device.  For example:
+You can now treat <code>/dev/mapper/virtual-sdx</code> as you would a normal disk device.  For example:
 
     sudo mkfs.ext4 /dev/mapper/virtual-sdx
     sudo mount /dev/mapper/virtual-sdx /mnt
@@ -89,15 +229,15 @@ One goal of PUREE is that the disk must be indistinguishable from random data. T
 The novel idea behind PUREE is to store these parameters *in the password*.  As a result, every PUREE password must be prefixed with a special character, called the "parameter char". Current valid values are:
 
 |**Parameter Char**|Parallelism|Memory|Iterations|
-|`0`|1|75MiB|1|
-|`1`|1|250MiB|1|
-|`2`|4|250MiB|4|
-|`3`|1|1GiB|1|
-|`4`|4|1GiB|4|
-|`5`|1|4GiB|1|
-|`6`|4|4GiB|4|
-|`7`|1|16GiB|1|
-|`8`|4|16GiB|4|
+|<code>0</code>|1|75MiB|1|
+|<code>1</code>|1|250MiB|1|
+|<code>2</code>|4|250MiB|4|
+|<code>3</code>|1|1GiB|1|
+|<code>4</code>|4|1GiB|4|
+|<code>5</code>|1|4GiB|1|
+|<code>6</code>|4|4GiB|4|
+|<code>7</code>|1|16GiB|1|
+|<code>8</code>|4|16GiB|4|
 
 As CPU and RAM become cheaper, more parameter chars will be added to this table.
 
@@ -106,9 +246,9 @@ As CPU and RAM become cheaper, more parameter chars will be added to this table.
 # PUREE Disk Format
 The exact format of a PUREE disk depends on a few important (boolean) conditionals:
 
-- `CipherHasParams` - The chosen cipher suite has tunable parameters
-- `IncludeAntiForensicsLayer` - Include an anti-forensics layer
-- `DeriveKey` - Derive the disk key from the password (instead of a csprng)
-- `DontStretchPassword` - Don't stretch the password hash, just hash once
+- <code>CipherHasParams</code> - The chosen cipher suite has tunable parameters
+- <code>IncludeAntiForensicsLayer</code> - Include an anti-forensics layer
+- <code>DeriveKey</code> - Derive the disk key from the password (instead of a csprng)
+- <code>DontStretchPassword</code> - Don't stretch the password hash, just hash once
 
 -->
