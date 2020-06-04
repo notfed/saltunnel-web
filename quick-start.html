@@ -24,18 +24,6 @@
 
     <div id="main-content-container">
       
-<style>
-.command {
-    margin:2em;
-    padding:0.5em;
-    color:black;
-    display:block;
-    border-radius:0.5em;
-    background-color:rgb(238, 238, 255);
-    border:5px solid #444;
-}
-</style>
-      
 <h2>How do I install <code>puree</code>?</h2>
       <p>
       While the PUREE disk format is platform-independent, the <code>puree</code> command-line tool currently only supports Linux.
@@ -136,7 +124,7 @@ d9e24fd60f42b399ed18adec4de8912a  |..O..B......M..*|
       
 <h2>Choosing a parameter char</h2>
       
-      <code>puree</code> encrypts disks in such a way that its primary key is derived using the <a href="https://en.m.wikipedia.org/wiki/Argon2">Argon2</a> password-key derivation function.  In order to calculate a derived key from a password, however, a few parameters are required:
+      <code>puree</code> encrypts disks in such a way that its primary key is derived using the <a href="https://en.m.wikipedia.org/wiki/Argon2">argon2id</a> password-key derivation function.  In order to calculate a derived key from a password, however, a few parameters are required:
       
       <ol>
       <li>Parallelism: the maximum number of parallel CPU threads</li>
