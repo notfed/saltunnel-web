@@ -95,10 +95,7 @@ bc884d1b0002bf4b3363623964393330  |..M....K3cb9d930|
       </p>
 
       <p>
-        But PUREE <i>does</i> solve this problem, and guarantees that all data on the disk, including the header, looks completely
-        random. Since it has long been common practice to <a href="https://en.wikipedia.org/wiki/Gutmann_method">wipe
-          disks by overwriting with random data</a>, PUREE introduces the plausibility that disk may actually have been
-        wiped and therefore contain no information. For example:
+        But PUREE <i>does</i> solve this problem, and guarantees that all data on the disk, including the header, looks completely random. Since it has long been common practice to wipe disks by overwriting with random data, PUREE introduces the plausibility that disk may actually have been wiped and therefore contain no information. For example:
       </p>
 
       <div style="text-align:center">
@@ -140,7 +137,7 @@ deab098fa0fc74c0f43a8501d16a1101  |......t..:...j..|
 
       <p>
         Despite being indistinguishable from random to an eavesdropper, there is in fact a structure to the disk
-        layout—only observable if the password is known—which is explained in the white paper.
+        layout—only observable if the password is known—which is explained in the <a href="puree.pdf">white paper</a>.
       </p>
 
       <p>PUREE also provides a pretty convenient command-line interface for encrypting disks, which you might find useful (even if you don't care about the whole indistinguishable-from-random thing). To try it out, move on to <a href="quick-start.html">Quick Start</a>.
