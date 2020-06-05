@@ -162,6 +162,14 @@ div#main-content-container
     background-color:rgb(238, 238, 255);
     border:5px solid #444;
 }
+.warning {
+    margin:2em;
+    padding:0.5em;
+    color:black;
+    display:block;
+    background-color:rgb(255, 238, 238);
+    border:5px dashed #A44;
+}
 /* ------------------------------------- 
              Form
  --------------------------------------- */
