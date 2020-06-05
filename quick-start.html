@@ -53,7 +53,7 @@ Let's go through the complete flow, from formatting a device with PUREE all the 
 </p>
 <p>
 <div class="warning">
-WARNING: By encrypting a device with PUREE, you will be wiping all data from the disk. Check and double-check that you are encrypting the device you think you are.
+WARNING: By encrypting a device with PUREE, you will be wiping all data from it. Check and double-check that you are encrypting the device you think you are.
 </div>
 </p>
 <p>
@@ -136,23 +136,24 @@ d9e24fd60f42b399ed18adec4de8912a  |..O..B......M..*|
       
       One goal of PUREE is that the disk must be indistinguishable from random data. This means these parameters can not be stored on the disk.  Instead, PUREE stores these parameters in the password.  Every PUREE password must be prefixed with a special character, called the "parameter char". Current valid values are:
 
-      <ul>
-      <li><code>'b' => parallelism: 1,  memory: 75MiB,  iterations: 1</code></li>
-      <li><code>'c' => parallelism: 1,  memory: 250MiB, iterations: 1</code></li>
-      <li><code>'d' => parallelism: 4,  memory: 250MiB, iterations: 4</code></li>
-      <li><code>'e' => parallelism: 1,  memory: 1GiB,   iterations: 1</code></li>
-      <li><code>'f' => parallelism: 4,  memory: 1GiB,   iterations: 4</code></li>
-      <li><code>'g' => parallelism: 1,  memory: 4GiB,   iterations: 1</code></li>
-      <li><code>'h' => parallelism: 4,  memory: 4GiB,   iterations: 4</code></li>
-      <li><code>'i' => parallelism: 1,  memory: 16GiB,  iterations: 1</code></li>
-      <li><code>'j' => parallelism: 4,  memory: 16GiB,  iterations: 4</code></li>
-      </ul>
+      <table class="parameters-table">
+      <tr><th></th><th>parallelism</th><th>memory</th><th>iterations</th></tr>
+      <tr><td>'<code>b</code>' =></td><td>1</td><td>75MiB</td><td>1</td></tr>
+      <tr><td>'<code>c</code>' =></td><td>1</td><td>250MiB</td><td>1</td></tr>
+      <tr><td>'<code>d</code>' =></td><td>4</td><td>250MiB</td><td>4</td></tr>
+      <tr><td>'<code>e</code>' =></td><td>1</td><td>1GiB</td><td>1</td></tr>
+      <tr><td>'<code>f</code>' =></td><td>4</td><td>1GiB</td><td>4</td></tr>
+      <tr><td>'<code>g</code>' =></td><td>1</td><td>4GiB</td><td>1</td></tr>
+      <tr><td>'<code>h</code>' =></td><td>4</td><td>4GiB</td><td>4</td></tr>
+      <tr><td>'<code>i</code>' =></td><td>1</td><td>16GiB</td><td>1</td></tr>
+      <tr><td>'<code>j</code>' =></td><td>4</td><td>16GiB</td><td>4</td></tr>
+      </table>
       
-      Also:
+      There's also the (not recommended) character:
       
-      <ul>
-      <li><code>'a' => simply hash the salt and password with blake2b</code></li>
-      </ul>
+      <table class="parameters-table">
+        <tr><td>'<code>a</code>' =></td><td colspan="3">simply hash the salt and password with blake2b</td></tr>
+      </table>
       
       As CPU and RAM become cheaper, more parameter chars will be added to this table.
       
