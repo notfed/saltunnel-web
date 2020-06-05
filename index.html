@@ -91,11 +91,11 @@ bc884d1b0002bf4b3363623964393330  |..M....K3cb9d930|
 
       <p>
         Clearly, it is trivial to detect that a disk is encrypted with LUKS. In fact, this isn't just a problem with LUKS;
-        it is a problem with (as it seems) all most encryption tools.
+        but also with (seemingly) <i>all</i> password-based disk encryption solutions before PUREE.  This isn't surprising: it turns out to be a difficult problem to solve.
       </p>
 
       <p>
-        PUREE solves this problem be guaranteeing that all data on the disk, including the header, looks completely
+        But PUREE <i>does</i> solve this problem, and guarantees that all data on the disk, including the header, looks completely
         random. Since it has long been common practice to <a href="https://en.wikipedia.org/wiki/Gutmann_method">wipe
           disks by overwriting with random data</a>, PUREE introduces the plausibility that disk may actually have been
         wiped and therefore contain no information. For example:
