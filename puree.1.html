@@ -1,7 +1,6 @@
 <HTML><HEAD><TITLE>Manpage of puree</TITLE>
 </HEAD><BODY>
-<H1>puree</H1>
-<HR>
+<H1>puree(1)</H1>
 
 <P>
 
@@ -10,7 +9,7 @@
 
 <P>
 
-<B>puree</B> - password-protect disk devices (using full-disk encryption) in such a way such that the entire disk is indistinguishable from random data.
+<B>puree</B> - encrypt devices with PUREE (the full-disk encryption format)
 <P>
 <A NAME="lbAC">&nbsp;</A>
 <H2>SYNOPSIS</H2>
@@ -34,7 +33,7 @@
 <P>
 
 <P>
-The <B>puree</B> tool suite allows you to password-protect disk devices (using <B>dm-crypt</B> and the PUREE header format) in such a way that the entire disk is indistinguishable from random data (i.e., plausible deniability). Notably this occurs without requiring you to store any associated data on a separate disk (for example, most disk encryption formats require the user to store a separate &quot;detached header&quot; somewhere to accomplish this).
+The <B>puree</B> tool suite allows you to password-protect disk devices (using <B>dm-crypt</B> and the PUREE header format) in such a way that the entire disk is indistinguishable from random data. Notably this occurs without requiring you to store any associated data on a separate disk (in comparison, most disk encryption formats require the user to store a separate &quot;detached header&quot; somewhere to accomplish this).
 <P>
 The full lifecycle of encrypting a disk with PUREE is as follows:
 <P>
@@ -135,7 +134,7 @@ Unmaps the virtual block device <I>plaindevice</I>, thereby making the device's 
 <B>puree destroy</B> [-f] [-v] [-q] &lt;<I>device</I>&gt;
 <P>
 <DL COMPACT><DT><DD>
-Destroys all data on the specified <B>device</B> by writing random data. <B>WARNING: This will wipe ALL data on the disk</B>. If <B>-q</B> is supplied, then only the first 1MiB of data and the last 1MiB of data on the disk will destroyed (which, for a cipherdisk encrypted with PUREE, will effectively wipe the entire disk).
+Destroys all data on the specified <B>device</B> by writing random data. <B>WARNING: This will wipe ALL data on the disk</B>. If <B>-q</B> is supplied, then only the first 1MiB of data and the last 1MiB of data on the disk will destroyed (which, for a cipherdevice previously encrypted with PUREE, will effectively wipe the entire disk).
 <P>
 </DL>
 <A NAME="lbAG">&nbsp;</A>
@@ -146,35 +145,35 @@ Destroys all data on the specified <B>device</B> by writing random data. <B>WARN
 <P>
 To format, map, and mount a device, you may perform the series of commands listed below, in order.
 <P>
-To encrypt device <B>/dev/sdc</B> with <B>AES-256-CBC-ESSIV-SHA256</B>:
+To encrypt device <B>/dev/sdz</B> with <B>AES-256-CBC-ESSIV-SHA256</B>:
 <P>
 <DL COMPACT><DT><DD>
-sudo puree format /dev/sdc disk-aes256-cbc-essiv-sha256
+sudo puree format /dev/sdz aes256-cbc-essiv-sha256
 </DL>
 
 <P>
-(You will be prompted for a password. PUREE will require you to prefix your password with a &quot;parameter char&quot;; see &quot;PARAMETER CHARACTERS&quot; section below for an explanation.)
+(You will be prompted for a password. PUREE will require you to prefix your password with a &quot;parameter character&quot;; see &quot;PARAMETER CHARACTERS&quot; section below for an explanation.)
 <P>
 Your device should now be encrypted.
 <P>
-Next, you'll need to &quot;map&quot; your encrypted disk device (we'll assume <B>/dev/sdc</B>) to a virtual device :
+Next, you'll need to &quot;map&quot; your encrypted disk device (we'll assume <B>/dev/sdz</B>) to a virtual device :
 <P>
 <DL COMPACT><DT><DD>
-sudo puree map /dev/sdc /dev/mapper/sdc
+sudo puree map /dev/sdz /dev/mapper/sdz
 </DL>
 
 <P>
 (You will be prompted to re-enter the password you chose earlier.)
 <P>
-Your virtual device should now be available at <B>/dev/mapper/sdc</B>. You can now treat <B>/dev/mapper/sdc</B> as you would a normal disk device, and its data will be transparently encrypted/decrypted.
+Your virtual device should now be available at <B>/dev/mapper/sdz</B>. You can now treat <B>/dev/mapper/sdz</B> as you would a normal disk device, and its data will be transparently encrypted/decrypted.
 <P>
 For example, to format it with a filesystem:
 <P>
 <DL COMPACT><DT><DD>
-sudo mkfs.ext4 /dev/mapper/sdc
+sudo mkfs.ext4 /dev/mapper/sdz
 <BR>
 
-sudo mount /dev/mapper/sdc /mnt
+sudo mount /dev/mapper/sdz /mnt
 </DL>
 
 <P>
@@ -183,13 +182,13 @@ You now have an filesystem mounted to <B>/mnt</B>. You can treat it like a norma
 When you're done using the device, unmap it with:
 <P>
 <DL COMPACT><DT><DD>
-sudo puree unmap /dev/mapper/sdc
+sudo puree unmap /dev/mapper/sdz
 </DL>
 
 <P>
 <P>
 
-To prove to yourself that the disk is encrypted, try running `sudo hexdump -C /dev/sdb | less`, and you'll see something like this:
+To prove to yourself that the disk is encrypted, try running `sudo hexdump -C /dev/sdz | less`, and you'll see something like this:
 <P>
 <PRE>
 00000000  3ac41e42 da074126 fb9d4c6a 01a15f56  |...B..A&amp;..Lj.._V|
@@ -220,7 +219,7 @@ To prove to yourself that the disk is encrypted, try running `sudo hexdump -C /d
 <H2>PARAMETER CHARACTERS</H2>
 
 <P>
-PUREE encrypts disks using the <B>argon2id</B> password-key derivation function.  In order to calculate a derived key from a password, however, a few parameters are required:
+PUREE encrypts disks using a key derived from a password via the <B>argon2id</B> password-key derivation function.  In order to calculate a derived key from a password, however, a few parameters are required:
 <P>
 1. Parallelism: the maximum number of parallel CPU threads
 <P>
@@ -228,28 +227,28 @@ PUREE encrypts disks using the <B>argon2id</B> password-key derivation function.
 <P>
 3. Iterations: multiplier on amount of time required
 <P>
-One goal of PUREE is that the disk must be indistinguishable from random. This means these parameters can not be stored on the disk.  Instead, PUREE stores these parameters in the password.  Every PUREE password must be prefixed with a special character, called the &quot;parameter char&quot;. Current valid values are:
+One goal of PUREE is that the disk must be indistinguishable from random. This means these parameters can not be stored on the disk.  Instead, PUREE stores these parameters in the password.  Every PUREE password must be prefixed with a special character, called the &quot;parameter character&quot;. Current valid values are:
 <P>
 <DL COMPACT><DT><DD>
 <PRE>
-39b' =&gt; parallelism: 1,  memory: 75MiB,  iterations: 1
-39c' =&gt; parallelism: 1,  memory: 250MiB, iterations: 1
-39d' =&gt; parallelism: 4,  memory: 250MiB, iterations: 4
-39e' =&gt; parallelism: 1,  memory: 1GiB,   iterations: 1
-39f' =&gt; parallelism: 4,  memory: 1GiB,   iterations: 4
-39g' =&gt; parallelism: 1,  memory: 4GiB,   iterations: 1
-39h' =&gt; parallelism: 4,  memory: 4GiB,   iterations: 4
-39i' =&gt; parallelism: 1,  memory: 16GiB,  iterations: 1
-39j' =&gt; parallelism: 4,  memory: 16GiB,  iterations: 4
-46..
+'b' =&gt; parallelism: 1,  memory: 75MiB,  iterations: 1
+'c' =&gt; parallelism: 1,  memory: 250MiB, iterations: 1
+'d' =&gt; parallelism: 4,  memory: 250MiB, iterations: 4
+'e' =&gt; parallelism: 1,  memory: 1GiB,   iterations: 1
+'f' =&gt; parallelism: 4,  memory: 1GiB,   iterations: 4
+'g' =&gt; parallelism: 1,  memory: 4GiB,   iterations: 1
+'h' =&gt; parallelism: 4,  memory: 4GiB,   iterations: 4
+'i' =&gt; parallelism: 1,  memory: 16GiB,  iterations: 1
+'j' =&gt; parallelism: 4,  memory: 16GiB,  iterations: 4
+...
 </PRE>
 
 <P>
-Or, if 'a' is chosen as the parameter char, the password will be derived simply by hashing the password (along with a salt) using the <B>blake2b</B> hash function.
+Or, if 'a' is chosen as the parameter character, the password will be derived simply by hashing the password (along with a salt) using the <B>blake2b</B> hash function.
 </DL>
 
 <P>
-As CPU and RAM become cheaper, more parameter chars will be added to this table.
+As CPU and RAM become cheaper, more parameter characters will be added to this table.
 <P>
 <A NAME="lbAI">&nbsp;</A>
 <H2>SUB-SPECIFICATIONS</H2>
@@ -291,15 +290,23 @@ Encrypt each sector of the disk with AES-128 in CBC-ESSIV mode, using SHA-256 as
 <P>
 
 If <B>puree</B> was successful, it will exit with code 0.
+<BR>
+
 If <B>puree</B> encounters an error, it will exit with code 1.
-If invalid arguments are passed to <B>puree</B> it will exit with code 2.
-<P>
-For more information, see &lt;<A HREF="https://identity.pub/puree">https://identity.pub/puree</A>&gt;.
+<BR>
+
+If invalid arguments are passed to <B>puree</B>, it will exit with code 2.
 <P>
 <A NAME="lbAK">&nbsp;</A>
+<H2>WEBSITE</H2>
+
+For more information, see &lt;<A HREF="https://puree.cc">https://puree.cc</A>&gt;.
+<P>
+<A NAME="lbAL">&nbsp;</A>
 <H2>AUTHOR</H2>
 
 Jay Sullivan &lt;<A HREF="mailto:jay@identity.pub">jay@identity.pub</A>&gt;
+<P>
 <P>
 </BODY>
 </HTML>
