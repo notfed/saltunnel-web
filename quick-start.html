@@ -3,6 +3,8 @@
 
 <head>
   <title>PUREE</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Inconsolata:wght@500&family=Roboto&family=Tinos&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="main.css" />
 </head>
 
@@ -24,9 +26,9 @@
 
     <div id="main-content-container">
       
-<h2>How do I install <code>puree</code>?</h2>
+<h2>How do I install <code class="tt">puree</code>?</h2>
       <p>
-      While the PUREE disk format is platform-independent, the <code>puree</code> command-line tool currently only supports Linux.
+      While the PUREE disk format is platform-independent, the <code class="tt">puree</code> command-line tool currently only supports Linux.
       </p>
       <p>
       As a prerequisite, the following system libraries must be installed:
@@ -37,64 +39,78 @@
     # Red Hat, Fedora:<br/>
     sudo dnf install python3 python3-pip python3-setuptools libsodium
 </code>
-      
-      Install <code>puree</code> with:
+      <p>
+      Install <code class="tt">puree</code> with:
+    </p>
       
 <code class="command">
           sudo python3 -m pip install puree
 </code>
       <p>
-      (Usually, using <code>sudo</code> to perform <code>pip install</code> is not recommended. However, because <code>puree</code> uses <a href="https://en.wikipedia.org/wiki/Device_mapper">device-mapper</a> which usually requires root access, and because disk devices usually require root access, <code>puree</code> is usually invoked with <code>sudo</code>—therefore we install with <code>sudo</code> because, otherwise, <code>sudo</code> tends to hide userspace-installed Python packages from the <code>PATH</code>.)
+      (Usually, using <code class="tt">sudo</code> to perform <code class="tt">pip install</code> is not recommended. However, because <code class="tt">puree</code> uses <a href="https://en.wikipedia.org/wiki/Device_mapper">device-mapper</a> which usually requires root access, and because disk devices usually require root access, <code class="tt">puree</code> is usually invoked with <code class="tt">sudo</code>—therefore we install with <code>sudo</code> because, otherwise, <code class="tt">sudo</code> tends to hide userspace-installed Python packages from the <code class="tt">PATH</code>.)
       </p>
       
 <h2>How do I use it?</h2>
 <p>
 Let's go through the complete flow, from formatting a device with PUREE all the way to mounting it.
 </p>
-<p>
+
 <div class="warning">
 WARNING: By formatting a device with PUREE, you will be wiping (essentially) all data from it. Check and double-check that you are encrypting the device you think you are.
 </div>
-</p>
+
 <p>
 We'll encrypt device <code>/dev/sdz</code> with <code>AES-256</code> in <code>XTS</code> mode.
 </p>
+
 <p>
 First, format the disk with PUREE:
 </p>      
       
 <code class="command">
-          sudo puree format /dev/sdz aes256-xts-plain64
+sudo puree format /dev/sdz aes256-xts-plain64
 </code>
-      You will be prompted for a password. For now, just type "<code>asdf</code>".
+<p>
+      You will be prompted for a password. For now, just type "<code class="tt">apassword</code>".
+    </p>
 
 <div class="note">
 NOTE: The first character of the password is important, because PUREE will require you to prefix your password with a "parameter character"; see the "<i>Choosing a parameter character</i>" section below for more information.
 </div>
-      
+      <p>
       Your device should now be encrypted.
-      
+    </p>
+    <p>
       Next, you'll need to "map" your encrypted disk device to a new virtual device:
+    </p>
       <code class="command">
           sudo puree map /dev/sdz /dev/mapper/sdz
         </code>
+        <p>
       (You will be prompted to enter the disk's password.)
-      
+    </p>
+      <p>
       The virtual device should now be available at <code>/dev/mapper/sdz</code>; you can now treat <code>/dev/mapper/sdz</code> as you would a normal disk device.  
-      
+    </p>
+      <p>
       For example, to format it with a filesystem, then mount it:
+    </p>
       <code class="command">
           <div>sudo mkfs.ext4 /dev/mapper/sdz</div>
           <div>sudo mount /dev/mapper/sdz /mnt</div>
       </code>
+      <p>
       You now have an encrypted fileystem available at <code>/mnt</code>.
-      
+    </p>
+    <p>
       To unmap the device, run:
+    </p>
       <code class="command">
           sudo puree unmap /dev/mapper/sdz
         </code>
+        <p>
       To prove to yourself that the disk is encrypted, try running <code class="code-inline">sudo hexdump -C /dev/sdz | less</code>, and you'll see something like this:
-    
+    </p>
 <div style="text-align:center">
 <pre class="hexdump">
 3ac41e42da074126fb9d4c6a01a15f56  |...B..A&..Lj.._V|
@@ -119,27 +135,27 @@ d9e24fd60f42b399ed18adec4de8912a  |..O..B......M..*|
 67a623656f15d733f4541fc78781bfd3  |g.#eo..3.T......|
 </pre>
 </div>
-      
+      <p>
       Now that you've done all that, be aware that, to truly keep your disk indistinguishable from random, you should first complete wipe the disk with random data:
-      
+    </p>
       <code class="command">
           sudo puree destroy /dev/sdz
       </code>
-      
+      <p>
       Then repeat the previous steps. (Previously, we left this step out as it tends to take a while.)
-      
+    </p>
 <h2>Choosing a parameter character</h2>
-      
+      <p>
       <code>puree</code> encrypts disks in such a way that its primary key is derived using the <a href="https://en.m.wikipedia.org/wiki/Argon2">argon2id</a> password-key derivation function.  In order to calculate a derived key from a password, however, a few parameters are required:
-      
+    </p>
       <ol>
       <li>Parallelism: the maximum number of parallel CPU threads</li>
       <li>Memory: the amount of RAM required</li>
       <li>Iterations: multiplier on amount of time required</li>
       </ol>
-      
+      <p>
       One goal of PUREE is that the disk must be indistinguishable from random data. This means these parameters can not be stored on the disk.  Instead, PUREE stores these parameters in the password.  Every PUREE password must be prefixed with a special character, called the "parameter char". Current valid values are:
-
+    </p>
       <table class="parameters-table">
       <tr><th></th><th>parallelism</th><th>memory</th><th>iterations</th></tr>
       <tr><td>'<code>b</code>' =></td><td>1</td><td>75MiB</td><td>1</td></tr>
@@ -153,14 +169,15 @@ d9e24fd60f42b399ed18adec4de8912a  |..O..B......M..*|
       <tr><td>'<code>j</code>' =></td><td>4</td><td>16GiB</td><td>4</td></tr>
       </table>
       
+      <p>
       There's also the (not recommended) character:
-      
+    </p>
       <table class="parameters-table">
         <tr><td>'<code>a</code>' =></td><td colspan="3">simply hash the salt and password with blake2b</td></tr>
       </table>
-      
+      <p>
       As CPU and RAM become cheaper, more parameter chars will be added to this table.
-      
+    </p>
 
     </div>
 

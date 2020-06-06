@@ -3,6 +3,7 @@
 
 <head>
   <title>PUREE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@500&family=Tinos&display=swap" rel="stylesheet"> 
   <link rel="stylesheet" href="main.css" />
 </head>
 
@@ -39,18 +40,22 @@
         }
       </style>
 
+    <p>
       <code>PUREE</code> is a full-disk encryption header format (and tool, currently only supported on Linux) which gives
       you the ability to perform full-disk encryption in a way that ensures that it is infeasible for someone to determine
       which of the following is true:
+    </p>
 
       <ol class="letter-list">
         <li>Your disk is encrypted, or</li>
         <li>Your disk has been "wiped" with random bits.</li>
       </ol>
 
+      <p>
       In comparison, the most common disk encryption header format used on Linux systems is <a
         href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">LUKS (Linux Unified Key Setup)</a>. If you were to
       look at the first 512 bytes of a disk encrypted with LUKS, you would see something like this:
+    </p>
 
       <div style="text-align:center">
 <pre class="hexdump">
@@ -99,7 +104,7 @@ bc884d1b0002bf4b3363623964393330  |..M....K3cb9d930|
       </p>
 
       <div style="text-align:center">
-<pre style="font: 10pt monospace;background-color:rgb(238, 238, 255);margin:0;padding:0; display:inline-block">
+<pre style="background-color:rgb(238, 238, 255);display:inline-block">
 5428898ff0f38e9d4437e36c3fbed0bc  |T(......D7.l?...|
 8a56fbe09c2ffd50fc25f420b6edc43e  |.V.../.P.%. ...>|
 f67d40635168013bafb9598f5a34e6c1  |.}@cQh.;..Y.Z4..|
@@ -146,8 +151,8 @@ deab098fa0fc74c0f43a8501d16a1101  |......t..:...j..|
     </div>
 
     <div id="main-footer">
-      <div>Last Modified: 2020-06-04</div>
-      <div>Jay Sullivan</div>
+      <div><code>Last Modified: 2020-06-04</code></div>
+      <div><code>Jay Sullivan</code></div>
     </div>
 
   </div>
