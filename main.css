@@ -222,11 +222,14 @@
     font-family: 'Roboto', sans-serif;
 }
 
-#main-content-container p, 
 #main-content-container li {
-    margin: 0.25em;
     font-size:14pt;
     font-family: 'Times New Roman', serif;
+}
+#main-content-container p {
+  font-size:14pt;
+  font-family: 'Times New Roman', serif;
+
 }
 code.tt {
     font-family: 'DM Mono', monospace;
