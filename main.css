@@ -359,15 +359,15 @@ ul.main-menu li a
 {
     text-decoration:none;
     padding: .2em;
-    color:#fff;
-    background-color:#115;
+    color:#000;
+    background-color:#6DBA3C;
     border:4px solid transparent;
 }
 ul.main-menu li a:hover,
 ul.main-menu li.menu-current
 {
-    color:#fff;
-    background-color:#11f;;
+    color:#000;
+    background-color:#6DBA3C;
 }
 ul.main-menu li.menu-current
 {
@@ -383,7 +383,7 @@ ul.main-menu li.menu-current
     padding:1px;
 }
 .hexdump {
-    background-color:rgb(238, 238, 255);
+    background-color:#edf1ea;
     display:inline-block;
 }
 .command {
