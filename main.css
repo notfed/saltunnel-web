@@ -440,6 +440,13 @@ ul.main-menu li.menu-current
   margin-top:1em;
   margin-bottom:1em;
 }
+.big-and-center-image {
+  text-align:center;
+}
+.big-and-center-image img{
+  width: 100%;
+  max-width:50em;
+}
 /* ------------------------------------- 
              Console style
  --------------------------------------- */

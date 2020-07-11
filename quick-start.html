@@ -15,8 +15,8 @@
       <h2>A cryptographically secure TCP tunnel</h2>
 
       <ul class="main-menu">
-        <li class="menu-current ui-corner-all">Introduction</li>
-        <li><a class="ui-corner-all" href="/quick-start.html">Quick Start</a></li>
+        <li><a class="ui-corner-all" href="/">Introduction</a></li>
+        <li class="menu-current ui-corner-all">Quick Start</li>
         <li><a class="ui-corner-all" href="/documentation.html">Documentation</a></li>
       </ul>
 
@@ -33,10 +33,10 @@
     sudo dnf install saltunnel  # Red Hat, Fedora<br/>
     sudo brew install saltunnel # OS X
 </code>
-Or, to build from source:
+Or, to install from source:
 <code class="command">
   git clone https://github.com/notfed/saltunnel.git<br/>
-  cd saltunnel.git<br/>
+  cd saltunnel<br/>
   sh autogen.sh<br/>
   ./configure<br/>
   make<br/>
@@ -44,131 +44,57 @@ Or, to build from source:
 </code>
 
 <h2>How do I use it?</h2>
-
+<!--
 <p>
-The intention of the <b>saltunnel</b> command-line tools is to augment existing TCP client/server software with a secure transport layer.
+A <code class="tt">saltunnel</code> tunnel starts with a <code class="tt">saltunnel client</code> and a <code class="tt">saltunnel server</code>. The client listens to a port, and for each connection request, establishes a secure <code class="tt">saltunnel</code> session with the specified server. The server listens to a secure port on the server machine, and forwards . We'll now go through all the steps to establish a tunnel. We'll haveIn this example, we'll assume that a program on our client machine wants to connect to our server machine's local port 80.
+-->
+
 </p>
-
-<p>
-First, format the disk with PUREE:
-</p>      
+<p>First, you'll need to generate a 32-byte uniform random key, and copy it to both the client and server machines. You may generate the key any way you like, and place it anywhere you like. But in this example, we'll place our key at <code class="tt">~/.saltunnel/k</code>, and we'll generate it and transfer it using the following commands:
+ </p>      
       
 <code class="command">
-sudo puree format /dev/sdz aes256-xts-plain64
+# ---- First machine ----<br/>
+$ saltunnel key generate ~/.saltunnel/k<br/>
+$ saltunnel key export ~/.saltunnel/k<br/>
+7FEAA77C58056730508590B60FB7E9ECD86985F16296EFB930A423AC97548EDC<br/>
+# ---- Second machine ----<br/>
+$ echo 7FEAA77C58056730508590B60FB7E9ECD86985F16296EFB930A423AC97548EDC | saltunnel key import ~/.saltunnel/k
 </code>
+  
+
+
 <p>
-      You will be prompted for a password. For now, just type "<code class="tt">apassword</code>".
-    </p>
+ Now that both machines have the same key, we can establish a tunnel.  Continuing the "Clyde and Steve" example from the "Introduction page, we want to end up with the following:
+</p>
+<p>
+  <div class="big-and-center-image">
+   <img src="clyde_steve_2.png"/>
+  </div>
+</p>
 
-<div class="note">
-NOTE: The first character of the password is important, because PUREE will require you to prefix your password with a "parameter character"; see the "<i>Choosing a parameter character</i>" section below for more information.
-</div>
-      <p>
-      Your device should now be encrypted.
-    </p>
-    <p>
-      Next, you'll need to "map" your encrypted disk device to a new virtual device:
-    </p>
-      <code class="command">
-          sudo puree map /dev/sdz /dev/mapper/sdz
-        </code>
-        <p>
-      (You will be prompted to enter the disk's password.)
-    </p>
-      <p>
-      The virtual device should now be available at <code>/dev/mapper/sdz</code>; you can now treat <code>/dev/mapper/sdz</code> as you would a normal disk device.  
-    </p>
-      <p>
-      For example, to format it with a filesystem, then mount it:
-    </p>
-      <code class="command">
-          <div>sudo mkfs.ext4 /dev/mapper/sdz</div>
-          <div>sudo mount /dev/mapper/sdz /mnt</div>
-      </code>
-      <p>
-      You now have an encrypted fileystem available at <code>/mnt</code>.
-    </p>
-    <p>
-      To unmap the device, run:
-    </p>
-      <code class="command">
-          sudo puree unmap /dev/mapper/sdz
-        </code>
-        <p>
-      To prove to yourself that the disk is encrypted, try running <code class="code-inline">sudo hexdump -C /dev/sdz | less</code>, and you'll see something like this:
-    </p>
-<div style="text-align:center">
-<pre class="hexdump">
-3ac41e42da074126fb9d4c6a01a15f56  |...B..A&..Lj.._V|
-c71c6c473a891a0777af909a4efb1a8f  |..lG:...w...N...|
-72fc3eac1766db1d55d2c0cd14a666bd  |r.>..f..U.....f.|
-5592d610bbc3ad8146eb2bf7cec566b6  |U.......F.+...f.|
-8c44df178868323dd175458d4327d107  |.D...h2=.uE.C'..|
-6dbf3af811083156dd3bb23583826b62  |m.:...1V.;.5..kb|
-fad3a02d48acebc57b79ce68ec9e68f1  |...-H...{y.h..h.|
-4c5daf931a2bb71face7f417ca627d05  |L]...+.......b}.|
-39568ce65ec12f5838c056d3d682d728  |9V..^./X8.V....(|
-446df278d823fee0ff2f4c04434b5f5e  |Dm.x.#.../L.CK_^|
-bc42583055c455cdb4439385c59bf3fd  |.BX0U.U..C......|
-62019305a5f38ce912c0c13876f31f1b  |b..........8v...|
-8e67545ae3abf95a2247fc0c5c55558c  |.gTZ...Z"G....U.|
-01c623448fbb35df80b313da63269760  |..#D..5.....c&.`|
-4dfbd88dd32a1179e4038d7c3c4412eb  |M....*.y...|&lt;D..|
-c856ecfe15e5c4a5d7f12165628c05b8  |.V........!eb...|
-6c00f7e2dcb39dcedff67d1de9551eaa  |l.........}..U..|
-d9e24fd60f42b399ed18adec4de8912a  |..O..B......M..*|
-2316e4131712a0a7044b96d3154d1b2f  |#........K...M./|
-67a623656f15d733f4541fc78781bfd3  |g.#eo..3.T......|
-</pre>
-</div>
-      <p>
-      Now that you've done all that, be aware that, to truly keep your disk indistinguishable from random, you should first completely wipe the disk with random data:
-    </p>
-      <code class="command">
-          sudo puree destroy /dev/sdz
-      </code>
-      <p>
-      Then repeat the previous steps. (Previously, we left this step out as it tends to take a while.)
-    </p>
-<h2>Choosing a parameter character</h2>
-      <p>
-      <code>puree</code> encrypts disks in such a way that its primary key is derived using the <a href="https://en.m.wikipedia.org/wiki/Argon2">argon2id</a> password-key derivation function.  In order to calculate a derived key from a password, however, a few parameters are required:
-    </p>
-      <ol>
-      <li>Parallelism: the maximum number of parallel CPU threads</li>
-      <li>Memory: the amount of RAM required</li>
-      <li>Iterations: multiplier on amount of time required</li>
-      </ol>
-      <p>
-      One goal of PUREE is that the disk must be indistinguishable from random data. This means these parameters can not be stored on the disk.  Instead, PUREE stores these parameters in the password.  Every PUREE password must be prefixed with a special character, called the "parameter char". Current valid values are:
-    </p>
-      <table class="parameters-table">
-      <tr><th></th><th>parallelism</th><th>memory</th><th>iterations</th></tr>
-      <tr><td>'<code>b</code>' =></td><td>1</td><td>75MiB</td><td>1</td></tr>
-      <tr><td>'<code>c</code>' =></td><td>1</td><td>250MiB</td><td>1</td></tr>
-      <tr><td>'<code>d</code>' =></td><td>4</td><td>250MiB</td><td>4</td></tr>
-      <tr><td>'<code>e</code>' =></td><td>1</td><td>1GiB</td><td>1</td></tr>
-      <tr><td>'<code>f</code>' =></td><td>4</td><td>1GiB</td><td>4</td></tr>
-      <tr><td>'<code>g</code>' =></td><td>1</td><td>4GiB</td><td>1</td></tr>
-      <tr><td>'<code>h</code>' =></td><td>4</td><td>4GiB</td><td>4</td></tr>
-      <tr><td>'<code>i</code>' =></td><td>1</td><td>16GiB</td><td>1</td></tr>
-      <tr><td>'<code>j</code>' =></td><td>4</td><td>16GiB</td><td>4</td></tr>
-      </table>
-      
-      <p>
-      There's also the (not recommended) character:
-    </p>
-      <table class="parameters-table">
-        <tr><td>'<code>a</code>' =></td><td colspan="3">simply hash the salt and password with blake2b</td></tr>
-      </table>
-      <p>
-      As CPU and RAM become cheaper, more parameter chars will be added to this table.
-    </p>
+<p>To get there, Clyde will need to run:</p>
 
+<code class="command">
+saltunnel client -k ~/.saltunnel/k 127.0.0.1:80 steves-ip-or-hostname.example.com:1025
+</code>
+
+<p>...and Steve will need to run:</p>
+
+<code class="command">
+  saltunnel server -k ~/.saltunnel/k 0.0.0.0:1025 127.0.0.1:80
+</code>
+
+<p>Finally, Steve will need to configure his router to forward port 1025 to his computer.</p>
+
+<p>
+  
+      <p>
+     That's it. Now, when Clyde establishes a TCP connection on his local port 80, all of the data within that connection will be securely authenticated, encrypted, and forwarded to Steve's local port 80.
     </div>
 
     <div id="main-footer">
-      <div>Last Modified: 2020-07-10</div>
+      <div>Last Modified: 2020-07-11</div>
       <div>Jay Sullivan</div>
     </div>
 

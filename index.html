@@ -42,94 +42,159 @@
     <h2>What is saltunnel?</h2>
 
     <p>
-      <code>saltunnel</code> is a secure transport-layer protocol&mdash;as well as a set of tools for establishing TCP tunnels using the protocol. Unlike SSH or TLS, it relies on symmetric-key cryptography to authenticate peers. As a consequence, it has the advantage (over SSH and TLS) of being secure against quantum computers, as well as having the property that all data (apart from TCP/IP headers and timing information) is indistinguishable from uniform random data. It's also pretty easy to install and use.
+      <code>saltunnel</code> is a secure transport-layer protocol&mdash;as well as a command-line tool used to establish TCP tunnels using the protocol. Unlike SSH or TLS, it relies on symmetric-key cryptography to authenticate peers&mdash;this has pros and cons. The pro is that it has the advantage (over SSH and TLS) of being secure against quantum computers, as well as having the property that all data (apart from TCP/IP headers and timing information) is indistinguishable from uniform random data. It's also pretty easy to install and use.
     </p>
 
       <p>
-      To illustrate the "indistinguishable-from-random" property, here's an example of a "client hello" handshake message sent by the client in a TLS connection:
-    </p>
+        The main use case for the <b>saltunnel</b> tool is to augment existing TCP client/server programs with a secure transport layer, specifically in cases where the client and server are run by the same (or closely trusted) people. 
+        For example, let's imagine that Steve has an HTTP server on his personal computer, and wants to give his brother Clyde (who currently resides elsewhere) access to his local port 80, but isn't comfortable exposing the unencrypted port to the Internet:</p>
+        
+        <p>
+          <div class="big-and-center-image">
+            <img src="clyde_steve_1.png"/>
+          </div>
+        </p>
+        
+        <p>There's several ways to achieve this. They could use a VPN, SSH, Mutual TLS, or any of many tunneling protocols out there. But they just want something simple that works. So, they both install <code class="tt">saltunnel</code>.  With one or two simple commands, Steve sets up a <code>saltunnel server</code> and Clyde sets up a <code>saltunnel client</code>. Steve then configures his router to forward a port, after which Clyde can freely access Steve's HTTP server.
+        <p>
+          <div class="big-and-center-image">
+           <img src="clyde_steve_2.png"/>
+          </div>
+        </p>
 
-      <div style="text-align:center">
-<pre class="hexdump">
-c46e1f5b0ef7a483e71666d208004500   .n.[......f...E.
-011b0000400040064ee7c0a801edb9c7   ....@.@.N.......
-6e99f58201bba7d90f840ff3cfb18018   n...............
-080a07df00000101080a11e25ad229bd   ............Z.).
-ea7f16030100e2010000de0303b58f0a   ................
-d125c1cf34360d948026e9e76b8e6ac8   .%..46...&..k.j.
-3cd761d8c577db6395a078fe2000005c   <.a..w.c..x. ..\
-c030c02cc028c024c014c00a009f006b   .0.,.(.$.......k
-0039cca9cca8ccaaff8500c400880081   .9..............
-009d003d003500c00084c02fc02bc027   ...=.5...../.+.'
-c023c013c009009e0067003300be0045   .#.......g.3...E
-009c003c002f00ba0041c011c0070005   ...<./...A......
-0004c012c0080016000a00ff01000059   ...............Y
-00000011000f00000c6964656e746974   .........salttun
-792e707562000b00020100000a000800   nel.io..........
-06001d00170018000d001c001a060106   ................
-03efef0501050304010403eeeeeded03   ................
-010303020102030010000e000c026832   ..............h2
-08687474702f312e31                 .http/1.1       
-</pre>
-      </div>
 
       <p>
-        And here's the equivalent from an SSH connection:
+        One interesting feature is that all data sent in the tunnel is indistinguishable from uniform random. To illustrate this, here's a snippet of some data that a network eavesdropper might see during a TLS handshake:
       </p>
   
         <div style="text-align:center">
-<pre class="hexdump">
+  <pre class="hexdump">
+...
+a483e71666d2c46e1f5b0ef708004500   ....f..n.[....E.
+05dc6ae7000034061dc55db8d822c0a8   ..j...4...].."..
+01ed01bbdd305b3e2da2ce6dcc568010   .....0[>-..m.V..
+00832c0200000101080a49b162a4132f   ..,.......I.b../
+c6fc16030300620200005e03031bdcb4   ......b...^.....
+2ca4e3a9a197795a0e273ca28aafd608   ,.....yZ.'<.....
+358a8e030f444f574e47524401208fe1   5....DOWNGRD. ..
+03810e53f6cba82d91df2742212c93bd   ...S...-..'B!,..
+aedf6f267be4f670e2837687008dc02f   ..o&{..p..v..../
+000016ff01000100000b000403000102   ................
+0010000500030268321603030f9f0b00   .......h2.......
+0f9b000f980007443082074030820628   .......D0..@0..(
+a00302010202100fd078dd48f1a2bd4d   .........x.H...M
+0f2ba96b6038fe300d06092a864886f7   .+.k`8.0...*.H..
+0d01010b0500304d310b300906035504   ......0M1.0...U.
+061302555331153013060355040a130c   ...US1.0...U....
+446967694365727420496e6331273025   DigiCert Inc1'0%
+0603550403131e446967694365727420   ..U....DigiCert 
+53484132205365637572652053657276   SHA2 Secure Serv
+6572204341301e170d31383131323830   er CA0...1811280
+30303030305a170d3230313230323132   00000Z..20120212
+303030305a3081a5310b300906035504   0000Z0..1.0...U.
+0613025553311330110603550408130a   ...US1.0...U....
+43616c69666f726e6961311430120603   California1.0...
+550407130b4c6f7320416e67656c6573   U....Los Angeles
+313c303a060355040a1333496e746572   1&lt;0:..U...3Inter
+6e657420436f72706f726174696f6e20   net Corporation 
+666f722041737369676e6564204e616d   for Assigned Nam
+657320616e64204e756d626572733113   es and Numbers1.
+3011060355040b130a546563686e6f6c   0...U....Technol
+6f6779311830160603550403130f7777   ogy1.0...U....ww
+772e6578616d706c652e6f7267308201   w.example.org0..
+...
+  </pre>
+        </div>
+  
+        <p>
+          And here's a snippet from an SSH connection:
+        </p>
+    
+          <div style="text-align:center">
+  <pre class="hexdump">
+...
 c46e1f5b0ef7a483e71666d208004500   .n.[......f...E.
 00490000400040066951c0a801ed2248   .I..@.@.iQ...."H
 ec80faab0016cb516b515e27dae38018   .......QkQ^'....
 08142e8000000101080a11fde64e26b8   .............N&.
 23915353482d322e302d4f70656e5353   #.SSH-2.0-OpenSS
 485f382e310d0a                     H_8.1..         
-</pre>
+...
+c46e1f5b0ef7a483e71666d208004500   .n.[......f...E.
+05a400004000400663f6c0a801ed2248   ....@.@.c....."H
+ec80faab0016cb516b665e27db0c8018   .......Qkf^'....
+08130fb900000101080a11fde68726b8   ..............&.
+23c90000056c04145470e323e41b976e   #....l..Tp.#...n
+481cd3bca77155390000010d63757276   H....qU9....curv
+6532353531392d7368613235362c6375   e25519-sha256,cu
+72766532353531392d73686132353640   rve25519-sha256@
+6c69627373682e6f72672c656364682d   libssh.org,ecdh-
+736861322d6e697374703235362c6563   sha2-nistp256,ec
+64682d736861322d6e69737470333834   dh-sha2-nistp384
+2c656364682d736861322d6e69737470   ,ecdh-sha2-nistp
+3532312c6469666669652d68656c6c6d   521,diffie-hellm
+616e2d67726f75702d65786368616e67   an-group-exchang
+652d7368613235362c6469666669652d   e-sha256,diffie-
+68656c6c6d616e2d67726f757031362d   hellman-group16-
+7368613531322c6469666669652d6865   sha512,diffie-he
+6c6c6d616e2d67726f757031382d7368   llman-group18-sh
+613531322c6469666669652d68656c6c   a512,diffie-hell
+6d616e2d67726f757031342d73686132   man-group14-sha2
+35362c6469666669652d68656c6c6d61   56,diffie-hellma
+6e2d67726f757031342d736861312c65   n-group14-sha1,e
+78742d696e666f2d6300000166656364   xt-info-c...fecd
+73612d736861322d6e69737470323536   sa-sha2-nistp256
+2d636572742d763031406f70656e7373   -cert-v01@openss
+682e636f6d2c65636473612d73686132   h.com,ecdsa-sha2
+2d6e697374703338342d636572742d76   -nistp384-cert-v
+...
+     
+  </pre>
+          </div>
+  
+  
+        <p>
+          Finally, compare the above to saltunnel, for which all data (including the handshake) appears completely random to an eavesdropper:
+        </p>
+  
+        <div style="text-align:center">
+  <pre class="hexdump">
+  21e083638806bcc017c75975da647ac9  |!..c......Yu.dz.|
+  f8e055dc960f941790b1c6ef1486bfb1  |..U.............|
+  77133cb2a45964f1be7443067bdf31d6  |w.<..Yd..tC.{.1.|
+  6cc9c0aef936b0a79fc31727611d3192  |l....6.....'a.1.|
+  3f3e043be992ebdc9d198886655faeff  |?>.;........e_..|
+  3d47b78b33a0d8949559e3c20525fa8f  |=G..3....Y...%..|
+  a8f7d74945f1a4b7e7dcea68734f3be6  |...IE......hsO;.|
+  61815e79c9b0c96ccefa35e28773cd0b  |a.^y...l..5..s..|
+  19bddf1f792b7a5c588306cbabad997b  |....y+z\X......{|
+  66973ba2be2d2ae823c2b335a13f87e7  |f.;..-*.#..5.?..|
+  99307e7336db07d32030f4bbd1449e63  |.0~s6... 0...D.c|
+  3c09e05a034f8fa4281ff7eaf7b91728  |<..Z.O..(......(|
+  2ecc0ca6957a9903795fe37b694e8b24  |.....z..y_.{iN.$|
+  78770095397dea33e641873ca9cced3b  |xw..9}.3.A.<...;|
+  495f44a2c950166221e3f9926e417905  |I_D..P.b!...nAy.|
+  7ee840b5ab04f988aa5e2a85a0e3f60d  |~.@......^*.....|
+  e182e6c8ee1c748baf19067c747fcc9c  |......t....|t...|
+  0a38531fc64cf06b2ff68cecafe8075d  |.8S..L.k/......]|
+  6f48c479a237eff8b040ee8312ecea9c  |oH.y.7...@......|
+  b7bbd0d78286537aecfee1ac6bd24485  |......Sz....k.D.|
+  05c0fe53bd73b9628f3b80e5dead47b9  |...S.s.b.;....G.|
+  d3e1951dd79ea6c940ca4d98e2f7bc87  |........@.M.....|
+  f8c6f18841763140fa31d8a6dc5cd1e5  |....Av1@.1...\..|
+  53171b9b54803882c19bd53b6833adc2  |S...T.8....;h3..|
+  138fcb94cbc98baa0af3dd662eabfe1c  |...........f....|
+  57c5d93b273605464e042d1075bfd637  |W..;'6.FN.-.u..7|
+  1ead015dc94d99b65f77e7eb6a2eb786  |...].M.._w..j...|
+  cd5dcedd4b86961535e46cb6a6618bbf  |.]..K...5.l..a..|
+  2234f63837d42a6d90e25fc11f835d8a  |"4.87.*m.._...].|
+  dfcec93fc1fa052427a4c78bf6a72008  |...?...$'..... .|
+  9fd8c030820b07659570620f0ad0f2e9  |...0...e.pb.....|
+  1110741fd6f7df137e32e3a868fcc7e4  |..t.....~2..h...|
+  </pre>
         </div>
-
-
-      <p>
-        Finally, compare the above to saltunnel, for which all data (including the handshake) appears completely random to an eavesdropper:
-      </p>
-
-      <div style="text-align:center">
-<pre class="hexdump">
-21e083638806bcc017c75975da647ac9  |!..c......Yu.dz.|
-f8e055dc960f941790b1c6ef1486bfb1  |..U.............|
-77133cb2a45964f1be7443067bdf31d6  |w.<..Yd..tC.{.1.|
-6cc9c0aef936b0a79fc31727611d3192  |l....6.....'a.1.|
-3f3e043be992ebdc9d198886655faeff  |?>.;........e_..|
-3d47b78b33a0d8949559e3c20525fa8f  |=G..3....Y...%..|
-a8f7d74945f1a4b7e7dcea68734f3be6  |...IE......hsO;.|
-61815e79c9b0c96ccefa35e28773cd0b  |a.^y...l..5..s..|
-19bddf1f792b7a5c588306cbabad997b  |....y+z\X......{|
-66973ba2be2d2ae823c2b335a13f87e7  |f.;..-*.#..5.?..|
-99307e7336db07d32030f4bbd1449e63  |.0~s6... 0...D.c|
-3c09e05a034f8fa4281ff7eaf7b91728  |<..Z.O..(......(|
-2ecc0ca6957a9903795fe37b694e8b24  |.....z..y_.{iN.$|
-78770095397dea33e641873ca9cced3b  |xw..9}.3.A.<...;|
-495f44a2c950166221e3f9926e417905  |I_D..P.b!...nAy.|
-7ee840b5ab04f988aa5e2a85a0e3f60d  |~.@......^*.....|
-e182e6c8ee1c748baf19067c747fcc9c  |......t....|t...|
-0a38531fc64cf06b2ff68cecafe8075d  |.8S..L.k/......]|
-6f48c479a237eff8b040ee8312ecea9c  |oH.y.7...@......|
-b7bbd0d78286537aecfee1ac6bd24485  |......Sz....k.D.|
-05c0fe53bd73b9628f3b80e5dead47b9  |...S.s.b.;....G.|
-d3e1951dd79ea6c940ca4d98e2f7bc87  |........@.M.....|
-f8c6f18841763140fa31d8a6dc5cd1e5  |....Av1@.1...\..|
-53171b9b54803882c19bd53b6833adc2  |S...T.8....;h3..|
-138fcb94cbc98baa0af3dd662eabfe1c  |...........f....|
-57c5d93b273605464e042d1075bfd637  |W..;'6.FN.-.u..7|
-1ead015dc94d99b65f77e7eb6a2eb786  |...].M.._w..j...|
-cd5dcedd4b86961535e46cb6a6618bbf  |.]..K...5.l..a..|
-2234f63837d42a6d90e25fc11f835d8a  |"4.87.*m.._...].|
-dfcec93fc1fa052427a4c78bf6a72008  |...?...$'..... .|
-9fd8c030820b07659570620f0ad0f2e9  |...0...e.pb.....|
-1110741fd6f7df137e32e3a868fcc7e4  |..t.....~2..h...|
-</pre>
-      </div>
-
+  
+        
       <p>
         Here's a detailed summary of <b>saltunnel</b>'s security features:
       </p>
@@ -179,7 +244,7 @@ dfcec93fc1fa052427a4c78bf6a72008  |...?...$'..... .|
     </div>
 
     <div id="main-footer">
-      <div><code>Last Modified: 2020-07-10</code></div>
+      <div><code>Last Modified: 2020-07-11</code></div>
       <div><code>Jay Sullivan</code></div>
     </div>
 
