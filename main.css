@@ -226,7 +226,10 @@
     font-size:14pt;
     font-family: 'Times New Roman', serif;
 }
-#main-content-container p {
+#main-content-container p,
+#main-content-container dd,
+#main-content-container dl
+{
   font-size:14pt;
   font-family: 'Times New Roman', serif;
 
@@ -383,7 +386,7 @@ ul.main-menu li.menu-current
     padding:1px;
 }
 .hexdump {
-    background-color:#edf1ea;
+    background-color:#f9fff5;
     display:inline-block;
 }
 .command {
@@ -422,6 +425,16 @@ ul.main-menu li.menu-current
 }
 .documentation-table {
     margin-left:auto;margin-right:auto;table-layout:fixed;
+}
+.bulleted-definition-list dt {
+  margin-left:1em;
+  margin-right:1em;
+  display: list-item;
+  list-style-type: disc;
+  list-style-position: inside;
+}
+.bulleted-definition-list dd {
+  margin:1em 3.5em 1em 3.5em;
 }
 /* ------------------------------------- 
              Console style
