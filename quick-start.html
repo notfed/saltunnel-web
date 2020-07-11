@@ -29,18 +29,18 @@
       To install <b>saltunnel</b>, run:
       </p>
 <code class="command">
-    sudo apt install saltunnel  # Debian, Ubuntu<br/>
-    sudo dnf install saltunnel  # Red Hat, Fedora<br/>
-    sudo brew install saltunnel # OS X
+    <span class="noselect">$ </span>sudo apt install saltunnel  # Debian, Ubuntu<br/>
+    <span class="noselect">$ </span>sudo dnf install saltunnel  # Red Hat, Fedora<br/>
+    <span class="noselect">$ </span>sudo brew install saltunnel # OS X
 </code>
 Or, to install from source:
 <code class="command">
-  git clone https://github.com/notfed/saltunnel.git<br/>
-  cd saltunnel<br/>
-  sh autogen.sh<br/>
-  ./configure<br/>
-  make<br/>
-  sudo make install<br/>
+  <span class="noselect">$ </span> git clone https://github.com/notfed/saltunnel.git<br/>
+  <span class="noselect">$ </span> cd saltunnel<br/>
+  <span class="noselect">$ </span> sh autogen.sh<br/>
+  <span class="noselect">$ </span> ./configure<br/>
+  <span class="noselect">$ </span> make<br/>
+  <span class="noselect">$ </span> sudo make install<br/>
 </code>
 
 <h2>How do I use it?</h2>
@@ -54,18 +54,18 @@ A <code class="tt">saltunnel</code> tunnel starts with a <code class="tt">saltun
  </p>      
       
 <code class="command">
-# ---- First machine ----<br/>
-$ saltunnel key generate ~/.saltunnel/k<br/>
-$ saltunnel key export ~/.saltunnel/k<br/>
-7FEAA77C58056730508590B60FB7E9ECD86985F16296EFB930A423AC97548EDC<br/>
-# ---- Second machine ----<br/>
-$ echo 7FEAA77C58056730508590B60FB7E9ECD86985F16296EFB930A423AC97548EDC | saltunnel key import ~/.saltunnel/k
+  <span class="noselect"># ---- First machine ----</span><br/>
+<span class="noselect">$ </span>saltunnel key generate ~/.saltunnel/k<br/>
+<span class="noselect">$ </span>saltunnel key export ~/.saltunnel/k<br/>
+<span class="noselect">7FEAA77C58056730508590B60FB7E9ECD86985F16296EFB930A423AC97548EDC</span><br/>
+<span class="noselect"># ---- Second machine ----</span><br/>
+<span class="noselect">$ </span>echo 7FEAA77C58056730508590B60FB7E9ECD86985F16296EFB930A423AC97548EDC | saltunnel key import ~/.saltunnel/k
 </code>
   
 
 
 <p>
- Now that both machines have the same key, we can establish a tunnel.  Continuing the "Clyde and Steve" example from the "Introduction page, we want to end up with the following:
+ Now that both machines have the same key, we can establish a tunnel.  Continuing the "Clyde and Steve" example from the <i>Introduction</i> page, we want to end up with the following:
 </p>
 <p>
   <div class="big-and-center-image">
@@ -90,7 +90,7 @@ saltunnel client -k ~/.saltunnel/k 127.0.0.1:80 steves-ip-or-hostname.example.co
 <p>
   
       <p>
-     That's it. Now, when Clyde establishes a TCP connection on his local port 80, all of the data within that connection will be securely authenticated, encrypted, and forwarded to Steve's local port 80.
+     That's it. Now, when Clyde establishes a TCP connection on his local port 80, all of the data within that connection will be securely authenticated, encrypted, and forwarded as a new connection to Steve's port 1025, which will in turn be verified, decrypted, and forwarded to Steve's local port 80.
     </div>
 
     <div id="main-footer">

@@ -234,11 +234,11 @@ ec80faab0016cb516b665e27db0c8018   .......Qkf^'....
 
       </dl>
         
-      <p>There are a few downsides to <b>saltunnel</b>:
+      <p>There are a few shortcomings of <b>saltunnel</b>:
         <ul class="spaced-bulleted-list">
           <li>As has already been stated, both the client and server must both be pre-configured with the same 32-byte (256-bit) shared key&mdash;distributing this key in a secure manner is left up to the user. </li>
-          <li>It can not act as an "open proxy". When a saltunnel client or server is running, it listens on a single <i>ip:port</i>, and forwards connections to a single <i>ip:port</i>.</li>
-          <li>It is a per-connection tunnel, and does not multiplex TCP connections. This means, while all payload data is encrypted/authenticated, a network eavesdropper can easily determine when new TCP connections start and finish.</li>
+          <li>When a saltunnel client or server is running, it listens on a single <i>ip:port</i> pair, and forwards connections to a single <i>ip:port</i> pair. The effect is that a separate tunnel must be opened for each destination port. </li>
+          <li>Tunnels do not multiplex TCP connections. Each connection request into a tunnel results in a separate, secure connection which is used to communicate with the other peer. The effect is that, while all payload data is encrypted/authenticated, a network eavesdropper can easily determine when new TCP connections start and finish.</li>
         </p>
 
     </div>
