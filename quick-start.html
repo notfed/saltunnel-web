@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>PUREE: Quick Start</title>
+  <title>saltunnel: Quick Start</title>
   <link rel="stylesheet" href="main.css" />
 </head>
 
@@ -11,12 +11,12 @@
   <div id="main-container">
 
     <div id="main-header-container">
-      <h1>PUREE</h1>
-      <h2>Password-based Uniform-Random-Equivalent Encryption</h2>
+      <h1>saltunnel</h1>
+      <h2>A cryptographically secure TCP tunnel</h2>
 
       <ul class="main-menu">
-        <li><a class="ui-corner-all" href="/">Introduction</a></li>
-        <li class="menu-current ui-corner-all">Quick Start</li>
+        <li class="menu-current ui-corner-all">Introduction</li>
+        <li><a class="ui-corner-all" href="/quick-start.html">Quick Start</a></li>
         <li><a class="ui-corner-all" href="/documentation.html">Documentation</a></li>
       </ul>
 
@@ -24,41 +24,29 @@
 
     <div id="main-content-container">
       
-<h2>How do I install <code class="tt">puree</code>?</h2>
+<h2>How do I install <code class="tt">saltunnel</code>?</h2>
       <p>
-      While the PUREE disk format is platform-independent, the <code class="tt">puree</code> command-line tool currently only supports Linux.
-      </p>
-      <p>
-      As a prerequisite, the following system libraries must be installed:
+      To install <b>saltunnel</b>, run:
       </p>
 <code class="command">
-    # Debian, Ubuntu:<br/>
-    sudo apt install python3 python3-pip python3-setuptools libsodium23<br/><br/>
-    # Red Hat, Fedora:<br/>
-    sudo dnf install python3 python3-pip python3-setuptools libsodium
+    sudo apt install saltunnel  # Debian, Ubuntu<br/>
+    sudo dnf install saltunnel  # Red Hat, Fedora<br/>
+    sudo brew install saltunnel # OS X
 </code>
-      <p>
-      Install <code class="tt">puree</code> with:
-    </p>
-      
+Or, to build from source:
 <code class="command">
-          sudo python3 -m pip install puree
+  git clone https://github.com/notfed/saltunnel.git<br/>
+  cd saltunnel.git<br/>
+  sh autogen.sh<br/>
+  ./configure<br/>
+  make<br/>
+  sudo make install<br/>
 </code>
-      <p>
-      (Usually, using <code class="tt">sudo</code> to perform <code class="tt">pip install</code> is not recommended. However, because <code class="tt">puree</code> uses <a href="https://en.wikipedia.org/wiki/Device_mapper">device-mapper</a> which usually requires root access, and because disk devices usually require root access, <code class="tt">puree</code> is usually invoked with <code class="tt">sudo</code>&mdash;therefore we install with <code>sudo</code> because, otherwise, <code class="tt">sudo</code> tends to hide userspace-installed Python packages from the <code class="tt">PATH</code>.)
-      </p>
-      
+
 <h2>How do I use it?</h2>
-<p>
-Let's go through the complete flow, from formatting a device with PUREE all the way to mounting it.
-</p>
-
-<div class="warning">
-WARNING: By formatting a device with PUREE, you will be wiping (essentially) all data from it. Check and double-check that you are encrypting the device you think you are.
-</div>
 
 <p>
-We'll encrypt device <code>/dev/sdz</code> with <code>AES-256</code> in <code>XTS</code> mode.
+The intention of the <b>saltunnel</b> command-line tools is to augment existing TCP client/server software with a secure transport layer.
 </p>
 
 <p>

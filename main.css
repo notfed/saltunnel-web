@@ -394,7 +394,7 @@ ul.main-menu li.menu-current
     color:black;
     display:block;
     border-radius:0.5em;
-    background-color:rgb(238, 238, 255);
+    background-color:#f9fff5;
     border:5px solid #444;
 }
 .warning {
