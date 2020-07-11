@@ -26,7 +26,7 @@
       
 <h2>How do I install <code class="tt">saltunnel</code>?</h2>
       <p>
-      To install <b>saltunnel</b>, run:
+      To install <code class="tt">saltunnel</code>, run:
       </p>
 <code class="command">
     <span class="noselect">$ </span>sudo apt install saltunnel  # Debian, Ubuntu<br/>
@@ -50,7 +50,7 @@ A <code class="tt">saltunnel</code> tunnel starts with a <code class="tt">saltun
 -->
 
 </p>
-<p>First, you'll need to generate a 32-byte uniform random key, and copy it to both the client and server machines. You may generate the key any way you like, and place it anywhere you like. But in this example, we'll place our key at <code class="tt">~/.saltunnel/k</code>, and we'll generate it and transfer it using the following commands:
+<p>First, you'll need to generate a key.  This key must be 32 uniform random bytes, and you must copy it to both the client and server machines. You may generate the key any way you like, and place it anywhere you like. But in this example, we'll place our key at <code class="tt">~/.saltunnel/k</code>, and we'll generate it and transfer it using the following commands:
  </p>      
       
 <code class="command">
@@ -65,7 +65,7 @@ A <code class="tt">saltunnel</code> tunnel starts with a <code class="tt">saltun
 
 
 <p>
- Now that both machines have the same key, we can establish a tunnel.  Continuing the "Clyde and Steve" example from the <i>Introduction</i> page, we want to end up with the following:
+ Next, you can establish a tunnel.  Continuing the "Clyde and Steve" example from the <i>Introduction</i> page, we want to end up with the following:
 </p>
 <p>
   <div class="big-and-center-image">
@@ -85,7 +85,7 @@ saltunnel client -k ~/.saltunnel/k 127.0.0.1:80 steves-ip-or-hostname.example.co
   saltunnel server -k ~/.saltunnel/k 0.0.0.0:1025 127.0.0.1:80
 </code>
 
-<p>Finally, Steve will need to configure his router to forward port 1025 to his computer.</p>
+<p>Finally, Steve will need to configure his network to forward port 1025 to his computer.</p>
 
 <p>
   

@@ -42,11 +42,11 @@
     <h2>What is saltunnel?</h2>
 
     <p>
-      <code>saltunnel</code> is a secure transport-layer protocol&mdash;as well as a command-line tool used to establish TCP tunnels using the protocol. Unlike SSH or TLS, it relies on symmetric-key cryptography to authenticate peers&mdash;this has pros and cons. The pro is that it has the advantage (over SSH and TLS) of being secure against quantum computers, as well as having the property that all data (apart from TCP/IP headers and timing information) is indistinguishable from uniform random data. It's also pretty easy to install and use.
+      <code class="tt">saltunnel</code> is a secure transport-layer protocol&mdash;as well as a command-line tool used to establish TCP tunnels using the protocol. Unlike SSH or TLS, it relies on symmetric-key cryptography to authenticate peers&mdash;this has pros and cons. The pro is that it has the advantage (over SSH and TLS) of being secure against quantum computers, as well as having the property that all data (apart from TCP/IP headers and timing information) is indistinguishable from uniform random data. It's also pretty easy to install and use.
     </p>
 
       <p>
-        The main use case for the <b>saltunnel</b> tool is to augment existing TCP client/server programs with a secure transport layer, specifically in cases where the client and server are run by the same (or closely trusted) people. 
+        The main use case for the <code class="tt">saltunnel</code> tool is to augment existing TCP client/server programs with a secure transport layer, specifically in cases where the client and server are run by the same (or closely trusted) people. 
         For example, let's imagine that Steve has an HTTP server on his personal computer, and wants to give his brother Clyde (who currently resides elsewhere) access to his local port 80, but isn't comfortable exposing the unencrypted port to the Internet:</p>
         
         <p>
@@ -196,24 +196,24 @@ ec80faab0016cb516b665e27db0c8018   .......Qkf^'....
   
         
       <p>
-        Here's a detailed summary of <b>saltunnel</b>'s security features:
+        Here's a detailed summary of <code class="tt">saltunnel</code>'s security features:
       </p>
 
       <dl class="bulleted-definition-list">
 
         <dt>Denial-of-Service Protection</dt>
         <dd>
-          <b>saltunnel</b> servers have denial-of-service protection; about as much as is possible for a TCP server. An attacker attempting to overload a <B>saltunnel</B> server instance will find that the most cost-effective attacks are (probably) reduced to exploiting the well-known shortcomings of TCP itself.
+          <code class="tt">saltunnel</code> servers have denial-of-service protection; about as much as is possible for a TCP server. An attacker attempting to overload a <code class="tt">saltunnel</code> server instance will find that the most cost-effective attacks are (probably) reduced to exploiting the well-known shortcomings of TCP itself.
         </dd>
         
         <dt>Forward Secrecy</dt>
         <dd>
-          Forward secrecy ensures that it is impossible to retroactively decrypt data from a past connection, even if, at some point in the future, the long-term shared symmetric key is compromised. Despite using a symmetric-key protocol for its initiating handshake, <b>saltunnel</b> performs a Diffie-Hellman exchange to obtain an ephemeral session key, which is then used for the remainder of the TCP connection. When a connection terminates, the ephemeral keys which were used to encrypt that connection are permanently erased. 
+          Forward secrecy ensures that it is impossible to retroactively decrypt data from a past connection, even if, at some point in the future, the long-term shared symmetric key is compromised. Despite using a symmetric-key protocol for its initiating handshake, <code class="tt">saltunnel</code> performs a Diffie-Hellman exchange to obtain an ephemeral session key, which is then used for the remainder of the TCP connection. When a connection terminates, the ephemeral keys which were used to encrypt that connection are permanently erased. 
         </dd>
         
         <dt>Key/Data Safety</dt>
         <dd>
-          <b>saltunnel</b> makes a point to always use <B>mlock</B> to "pin" all keys and plaintext in memory, so that they are never swapped to disk. Additionally, as soon as each connection is closed, that connection's keys and plaintext are immediately erased from memory. This (usually) provides forward secrecy even in the face of disk forensics or cold-boot attacks (assuming your <B>RLIMIT_MEMLOCK</B> is not too low and assuming you don't enter hibernate mode while a connection is active).
+          <code class="tt">saltunnel</code> makes a point to always use <B>mlock</B> to "pin" all keys and plaintext in memory, so that they are never swapped to disk. Additionally, as soon as each connection is closed, that connection's keys and plaintext are immediately erased from memory. This (usually) provides forward secrecy even in the face of disk forensics or cold-boot attacks (assuming your <B>RLIMIT_MEMLOCK</B> is not too low and assuming you don't enter hibernate mode while a connection is active).
         </dd>
         
         <dt>Message-Length Quantization</dt>
@@ -224,17 +224,17 @@ ec80faab0016cb516b665e27db0c8018   .......Qkf^'....
         <dt>Post-Quantum Security</dt>
         <dd>
           The protocol is also immune to quantum computing attacks, because its security relies on 256-bit symmetric-key cryptography. (Of which, the best attack known to be possible by quantum computers is Grover's algorithm, which reduces the security level to 128 bits.) 
-          The catch, of course, is that as a prerequisite to using <b>saltunnel</b>, the key must be (somehow) shared securely between parties&mdash;a process which is famously difficult to do, especially in a post-quantum-secure way.
+          The catch, of course, is that as a prerequisite to using <code class="tt">saltunnel</code>, the key must be (somehow) shared securely between parties&mdash;a process which is famously difficult to do, especially in a post-quantum-secure way.
         </dd>
         
         <dt>Uniform Randomness</dt>
         <dd>
-          An attacker who eavesdrops on a <b>saltunnel</b> connection will only see a TCP connection with same-sized chunks  of uniform random data. There are no protocol header magic bytes or patterns within any given chunk of data.  This complicates an attacker's ability to track/fingerprint users, and makes it difficult to write analysis tools that detect/censor the <b>saltunnel</b> protocol. (Though, patterns may still be available through timing analysis.)
+          An attacker who eavesdrops on a <code class="tt">saltunnel</code> connection will only see a TCP connection with same-sized chunks  of uniform random data. There are no protocol header magic bytes or patterns within any given chunk of data.  This complicates an attacker's ability to track/fingerprint users, and makes it difficult to write analysis tools that detect/censor the <code class="tt">saltunnel</code> protocol. (Though, patterns may still be available through timing analysis.)
         </dd>
 
       </dl>
         
-      <p>There are a few shortcomings of <b>saltunnel</b>:
+      <p>There are a few shortcomings of <code class="tt">saltunnel</code>:
         <ul class="spaced-bulleted-list">
           <li>As has already been stated, both the client and server must both be pre-configured with the same 32-byte (256-bit) shared key&mdash;distributing this key in a secure manner is left up to the user. </li>
           <li>When a saltunnel client or server is running, it listens on a single <i>ip:port</i> pair, and forwards connections to a single <i>ip:port</i> pair. The effect is that a separate tunnel must be opened for each destination port. </li>
