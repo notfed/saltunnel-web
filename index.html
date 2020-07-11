@@ -42,11 +42,11 @@
     <h2>What is saltunnel?</h2>
 
     <p>
-      <code>saltunnel</code> is a secure transport-layer protocol&mdash;as well as a set of tools which establish a TCP tunnel using the protocol. Unlike SSH or TLS, it relies on symmetric-key cryptography to authenticate peers. As a consequence, it has the advantage (over SSH and TLS) of being secure against quantum computers, as well as having the property that all data (apart from TCP/IP headers and timing information) is indistinguishable from uniform random data. It's also pretty easy to install and use.
+      <code>saltunnel</code> is a secure transport-layer protocol&mdash;as well as a set of tools for establishing TCP tunnels using the protocol. Unlike SSH or TLS, it relies on symmetric-key cryptography to authenticate peers. As a consequence, it has the advantage (over SSH and TLS) of being secure against quantum computers, as well as having the property that all data (apart from TCP/IP headers and timing information) is indistinguishable from uniform random data. It's also pretty easy to install and use.
     </p>
 
       <p>
-      To illustrate the "indistinguishable-from-random" property, here's an example of a connection-initiating "client hello" sent by the client in a TLS connection:
+      To illustrate the "indistinguishable-from-random" property, here's an example of a "client hello" handshake message sent by the client in a TLS connection:
     </p>
 
       <div style="text-align:center">
@@ -74,7 +74,7 @@ c023c013c009009e0067003300be0045   .#.......g.3...E
       </div>
 
       <p>
-        And, here's the equivalent from an SSH connection:
+        And here's the equivalent from an SSH connection:
       </p>
   
         <div style="text-align:center">
@@ -90,43 +90,43 @@ ec80faab0016cb516b515e27dae38018   .......QkQ^'....
 
 
       <p>
-        Finally, compare the above to saltunnel, which always appears completely random to an eavesdropper:
+        Finally, compare the above to saltunnel, for which all data (including the handshake) appears completely random to an eavesdropper:
       </p>
 
       <div style="text-align:center">
 <pre class="hexdump">
-5428898ff0f38e9d4437e36c3fbed0bc  |T(......D7.l?...|
-8a56fbe09c2ffd50fc25f420b6edc43e  |.V.../.P.%. ...>|
-f67d40635168013bafb9598f5a34e6c1  |.}@cQh.;..Y.Z4..|
-2dd819b451fd16a36fdbc05ae3d4ee7c  |-...Q...o..Z...||
-a4df25e96903f99cc1034da21a2519b0  |..%.i.....M..%..|
-145459c13551336ac3156057b2581d3d  |.TY.5Q3j...W.X.=|
-ef9296c4f7dd9c0bf6cc6690b0096420  |..........f...d |
-acfdd8ecafb0b30907e2b42b033a801a  |...........+.:..|
-71fa31990ac9c14d446f542d3c83dd74  |q.1....MDoT-<..t|
-7c6dc1b956a78d497ec99111a5e58ad1  ||m..V..I~.......|
-543e6699d4ae77f6675d3fc3a2fd871e  |T>f...w.g]?.....|
-3d0491231c2d187142c99772983abac4  |=..#.-.qB..r.:..|
-33c83c9ff5b976b857e6332279bc5653  |3.<...v.W.3"y.VS|
-4762b74abbd7a055d6ed143a3d51446f  |Gb.J...U...:=QDo|
-16db104718780165044c43481fcb2ba7  |...G.x.e.LCH..+.|
-f478a04ad9709389d7854847f74f650a  |.x.J.p....HG.Oe.|
-85aa99e3da85c77c0f89dbccfc1d0fd0  |.......|........|
-7462e3319b94f0bf6436fa67f7ef825e  |tb.1....d6.g...^|
-3db8ae78b1f75d61dd466adcc3ddafda  |=..x..]a.Fj.....|
-dac554df4443c45ec934fda6576ef8c7  |..T.DC.^.4..Wn..|
-17cd9d426cf496d909b856b42778ab70  |...Bl.....V.'x.p|
-6efd4d4e02e0b3ff4c76bf294e0c2009  |n.MN....Lv.)N. .|
-d99be35b1d75b87094685d7b84c71215  |...[.u.p.h]{....|
-b2b2edd300c0f25567a671fd01996c31  |.......Ug.q...l1|
-522b67a08c3ce316a2011334e9daf3b7  |R+g..<.....4....|
-656fd409ba103461014cf47226e87c48  |eo....4a.L.r&.|H|
-718ace2294d081fcbc7df1177358b1e9  |q..".....}..sX..|
-c0848e2f04c9b848f689f10dceb11b73  |.../...H.......s|
-90fba8df163148d07208c2e108a9c51a  |.....1H.r.......|
-2506238114b5c293bf8ebf246f6ab1d2  |%.#........$oj..|
-d669f7f48ba09590e49472440196c1ab  |.i........rD....|
-deab098fa0fc74c0f43a8501d16a1101  |......t..:...j..|
+21e083638806bcc017c75975da647ac9  |!..c......Yu.dz.|
+f8e055dc960f941790b1c6ef1486bfb1  |..U.............|
+77133cb2a45964f1be7443067bdf31d6  |w.<..Yd..tC.{.1.|
+6cc9c0aef936b0a79fc31727611d3192  |l....6.....'a.1.|
+3f3e043be992ebdc9d198886655faeff  |?>.;........e_..|
+3d47b78b33a0d8949559e3c20525fa8f  |=G..3....Y...%..|
+a8f7d74945f1a4b7e7dcea68734f3be6  |...IE......hsO;.|
+61815e79c9b0c96ccefa35e28773cd0b  |a.^y...l..5..s..|
+19bddf1f792b7a5c588306cbabad997b  |....y+z\X......{|
+66973ba2be2d2ae823c2b335a13f87e7  |f.;..-*.#..5.?..|
+99307e7336db07d32030f4bbd1449e63  |.0~s6... 0...D.c|
+3c09e05a034f8fa4281ff7eaf7b91728  |<..Z.O..(......(|
+2ecc0ca6957a9903795fe37b694e8b24  |.....z..y_.{iN.$|
+78770095397dea33e641873ca9cced3b  |xw..9}.3.A.<...;|
+495f44a2c950166221e3f9926e417905  |I_D..P.b!...nAy.|
+7ee840b5ab04f988aa5e2a85a0e3f60d  |~.@......^*.....|
+e182e6c8ee1c748baf19067c747fcc9c  |......t....|t...|
+0a38531fc64cf06b2ff68cecafe8075d  |.8S..L.k/......]|
+6f48c479a237eff8b040ee8312ecea9c  |oH.y.7...@......|
+b7bbd0d78286537aecfee1ac6bd24485  |......Sz....k.D.|
+05c0fe53bd73b9628f3b80e5dead47b9  |...S.s.b.;....G.|
+d3e1951dd79ea6c940ca4d98e2f7bc87  |........@.M.....|
+f8c6f18841763140fa31d8a6dc5cd1e5  |....Av1@.1...\..|
+53171b9b54803882c19bd53b6833adc2  |S...T.8....;h3..|
+138fcb94cbc98baa0af3dd662eabfe1c  |...........f....|
+57c5d93b273605464e042d1075bfd637  |W..;'6.FN.-.u..7|
+1ead015dc94d99b65f77e7eb6a2eb786  |...].M.._w..j...|
+cd5dcedd4b86961535e46cb6a6618bbf  |.]..K...5.l..a..|
+2234f63837d42a6d90e25fc11f835d8a  |"4.87.*m.._...].|
+dfcec93fc1fa052427a4c78bf6a72008  |...?...$'..... .|
+9fd8c030820b07659570620f0ad0f2e9  |...0...e.pb.....|
+1110741fd6f7df137e32e3a868fcc7e4  |..t.....~2..h...|
 </pre>
       </div>
 
@@ -148,7 +148,7 @@ deab098fa0fc74c0f43a8501d16a1101  |......t..:...j..|
         
         <dt>Key/Data Safety</dt>
         <dd>
-          <b>saltunnel</b> makes a point to always use <B>mlock</B> to pin all keys and plaintext to memory, so that they are never swapped to disk. Additionally, as soon as each connection is closed, that connection's keys and plaintext are immediately erased from memory (except when the program is terminated via interrupt, unfortunately). This (usually) provides forward secrecy even in the face of disk forensics (assuming your <B>RLIMIT_MEMLOCK</B> is not too low) or cold-boot attacks (assuming you don't terminate the program or enter sleep mode while a connection is active).
+          <b>saltunnel</b> makes a point to always use <B>mlock</B> to "pin" all keys and plaintext in memory, so that they are never swapped to disk. Additionally, as soon as each connection is closed, that connection's keys and plaintext are immediately erased from memory. This (usually) provides forward secrecy even in the face of disk forensics or cold-boot attacks (assuming your <B>RLIMIT_MEMLOCK</B> is not too low and assuming you don't enter hibernate mode while a connection is active).
         </dd>
         
         <dt>Message-Length Quantization</dt>
@@ -159,21 +159,21 @@ deab098fa0fc74c0f43a8501d16a1101  |......t..:...j..|
         <dt>Post-Quantum Security</dt>
         <dd>
           The protocol is also immune to quantum computing attacks, because its security relies on 256-bit symmetric-key cryptography. (Of which, the best attack known to be possible by quantum computers is Grover's algorithm, which reduces the security level to 128 bits.) 
-          The catch, of course, is that as a prerequisite to using <b>saltunnel</b>, the key must be (somehow) shared securely between parties&mdash;a process which is famously difficult to do in a post-quantum-secure way.
+          The catch, of course, is that as a prerequisite to using <b>saltunnel</b>, the key must be (somehow) shared securely between parties&mdash;a process which is famously difficult to do, especially in a post-quantum-secure way.
         </dd>
         
-        <dt>Steganography</dt>
+        <dt>Uniform Randomness</dt>
         <dd>
-          The protocol is steganographic-by-randomness, in that the entire protocol is indistinguishable from random: if someone attempts to eavesdrop on the conversation, they will be unable to detect any (for example) protocol header magic bytes or patterns in the data (apart from traffic analysis).
+          An attacker who eavesdrops on a <b>saltunnel</b> connection will only see a TCP connection with same-sized chunks  of uniform random data. There are no protocol header magic bytes or patterns within any given chunk of data.  This complicates an attacker's ability to track/fingerprint users, and makes it difficult to write analysis tools that detect/censor the <b>saltunnel</b> protocol. (Though, patterns may still be available through timing analysis.)
         </dd>
 
       </dl>
         
       <p>There are a few downsides to <b>saltunnel</b>:
-        <ul>
-          <li>As has already been stated, both the client and server must be pre-configured with a single 32-byte (256-bit) shared key&mdash;distributing this key in a secure manner is left up to the user. </li>
+        <ul class="spaced-bulleted-list">
+          <li>As has already been stated, both the client and server must both be pre-configured with the same 32-byte (256-bit) shared key&mdash;distributing this key in a secure manner is left up to the user. </li>
           <li>It can not act as an "open proxy". When a saltunnel client or server is running, it listens on a single <i>ip:port</i>, and forwards connections to a single <i>ip:port</i>.</li>
-          <li>It a per-connection tunnel, and does not multiplex TCP connections. This means, while all payload data is encrypted/authenticated, a network eavesdropper can easily determine when new TCP connections start and finish.</li>
+          <li>It is a per-connection tunnel, and does not multiplex TCP connections. This means, while all payload data is encrypted/authenticated, a network eavesdropper can easily determine when new TCP connections start and finish.</li>
         </p>
 
     </div>

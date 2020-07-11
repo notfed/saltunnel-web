@@ -436,6 +436,10 @@ ul.main-menu li.menu-current
 .bulleted-definition-list dd {
   margin:1em 3.5em 1em 3.5em;
 }
+.spaced-bulleted-list li {
+  margin-top:1em;
+  margin-bottom:1em;
+}
 /* ------------------------------------- 
              Console style
  --------------------------------------- */
