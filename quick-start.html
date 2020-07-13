@@ -39,12 +39,12 @@
 -->
 To install from source:
 <code class="command">
-  <span class="noselect">$ </span> git clone https://github.com/notfed/saltunnel.git<br/>
-  <span class="noselect">$ </span> cd saltunnel<br/>
-  <span class="noselect">$ </span> sh autogen.sh<br/>
-  <span class="noselect">$ </span> ./configure<br/>
-  <span class="noselect">$ </span> make<br/>
-  <span class="noselect">$ </span> sudo make install<br/>
+  <span class="noselect gray">$ </span> git clone https://github.com/notfed/saltunnel.git<br/>
+  <span class="noselect gray">$ </span> cd saltunnel<br/>
+  <span class="noselect gray">$ </span> sh autogen.sh<br/>
+  <span class="noselect gray">$ </span> ./configure<br/>
+  <span class="noselect gray">$ </span> make<br/>
+  <span class="noselect gray">$ </span> sudo make install<br/>
 </code>
 
 <h2>How do I use it?</h2>
@@ -54,16 +54,21 @@ A <code class="tt">saltunnel</code> tunnel starts with a <code class="tt">saltun
 -->
 
 </p>
-<p>First, you'll need to generate a key.  This key must be 32 uniform random bytes, and you must copy it to both the client and server machines. You may generate the key any way you like, and place it anywhere you like. But in this example, we'll place our key at <code class="tt">~/.saltunnel/k</code>, and we'll generate it and transfer it using the following commands:
+<p>First, you'll need to generate a long-term key.  This key must be 32 uniform random bytes, and you must copy it to both the client and server machines. You may generate the key any way you like, and place it anywhere you like. But in this example, we'll place our key at <code class="tt">~/.saltunnel/k</code>, and we'll generate it and transfer it (which we'll do by manually re-typing the key) using the following commands:
  </p>      
       
 <code class="command">
-  <span class="noselect"># ---- First machine ----</span><br/>
-<span class="noselect">$ </span>saltunnel key generate ~/.saltunnel/k<br/>
-<span class="noselect">$ </span>saltunnel key export ~/.saltunnel/k<br/>
-<span class="noselect">7FEAA77C58056730508590B60FB7E9ECD86985F16296EFB930A423AC97548EDC</span><br/>
-<span class="noselect"># ---- Second machine ----</span><br/>
-<span class="noselect">$ </span>echo 7FEAA77C58056730508590B60FB7E9ECD86985F16296EFB930A423AC97548EDC | saltunnel key import ~/.saltunnel/k
+<span class="noselect gray"># ---- First machine ----<br/></span>
+<span class="noselect gray">$ </span>mkdir ~/.saltunnel/k<br/>
+<span class="noselect gray">$ </span>saltunnel key generate ~/.saltunnel/k<br/>
+<span class="noselect gray">$ </span>saltunnel key export ~/.saltunnel/k<br/>
+<span class="noselect gray">7FEA-A77C-5805-6730-5085-90B6-0FB7-E9EC-D869-85F1-6296-EFB9-30A4-23AC-8EDC-81E4<br/></span>
+</code>
+<code class="command">
+<span class="noselect gray"># ---- Second machine ----<br/></span>
+<span class="noselect gray">$ </span>mkdir ~/.saltunnel/k<br/>
+<span class="noselect gray">$ </span>saltunnel key import ~/.saltunnel/k<br/>
+7FEA-A77C-5805-6730-5085-90B6-0FB7-E9EC-D869-85F1-6296-EFB9-30A4-23AC-8EDC-81E4
 </code>
   
 

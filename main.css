@@ -455,6 +455,9 @@ ul.main-menu li.menu-current
   -ms-user-select: none;
   user-select: none;
 }
+.gray {
+  color:#777;
+}
 /* ------------------------------------- 
              Console style
  --------------------------------------- */

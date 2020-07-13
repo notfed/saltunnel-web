@@ -42,7 +42,7 @@
     <h2>What is saltunnel?</h2>
 
     <p>
-      <code class="tt">saltunnel</code> is a secure transport-layer protocol&mdash;as well as a command-line tool used to establish TCP tunnels using the protocol. Unlike SSH or TLS, it relies on symmetric-key cryptography to authenticate peers&mdash;this has pros and cons. The pro is that it has the advantage (over SSH and TLS) of being secure against quantum computers, as well as having the property that all data (apart from TCP/IP headers and timing information) is indistinguishable from uniform random data. It's also pretty easy to install and use.
+      <code class="tt">saltunnel</code> is a secure transport-layer protocol&mdash;as well as a command-line tool used to establish TCP tunnels protected by the protocol. Unlike SSH or TLS, it relies on symmetric-key cryptography to authenticate peers. This has pros and cons: the pro is that it has the advantage (over SSH and TLS) of being secure against quantum computing attacks, as well as having the interesting property that all TCP data (apart from TCP/IP headers and timing information) is indistinguishable from uniform random bytes. <code class="tt">saltunnel</code> is also pretty easy to install and use.
     </p>
 
       <p>
@@ -55,7 +55,7 @@
           </div>
         </p>
         
-        <p>There's several ways to achieve this. They could use a VPN, SSH, Mutual TLS, or any of many tunneling protocols out there. But they just want something simple that works. So, they both install <code class="tt">saltunnel</code>.  With one or two simple commands, Steve sets up a <code>saltunnel server</code> and Clyde sets up a <code>saltunnel client</code>. Steve then configures his router to forward a port, after which Clyde can freely access Steve's HTTP server.
+        <p>There are already several ways they could achieve this. They could use a VPN, SSH, Mutual TLS, or one of many tunneling protocols out there. But they just want something simple and lightweight that works. So, they both install <code class="tt">saltunnel</code>.  With one or two simple commands, Steve sets up a <code>saltunnel server</code> and Clyde sets up a <code>saltunnel client</code>. Steve then configures his router to forward a port, after which Clyde can freely access Steve's HTTP server.
         <p>
           <div class="big-and-center-image">
            <img src="clyde_steve_2.png"/>
@@ -64,11 +64,11 @@
 
 
       <p>
-        One interesting feature is that all data sent in the tunnel is indistinguishable from uniform random. To illustrate this, here's a snippet of some data that a network eavesdropper might see during a TLS handshake:
+        One interesting property is that all data sent through the TCP connection is indistinguishable from uniform random. To illustrate this, here's a snippet of some data that a network eavesdropper might see during a TLS handshake:
       </p>
   
         <div style="text-align:center">
-  <pre class="hexdump">
+<pre class="hexdump">
 ...
 a483e71666d2c46e1f5b0ef708004500   ....f..n.[....E.
 05dc6ae7000034061dc55db8d822c0a8   ..j...4...].."..
@@ -103,7 +103,7 @@ a00302010202100fd078dd48f1a2bd4d   .........x.H...M
 6f6779311830160603550403130f7777   ogy1.0...U....ww
 772e6578616d706c652e6f7267308201   w.example.org0..
 ...
-  </pre>
+</pre>
         </div>
   
         <p>
@@ -111,7 +111,7 @@ a00302010202100fd078dd48f1a2bd4d   .........x.H...M
         </p>
     
           <div style="text-align:center">
-  <pre class="hexdump">
+<pre class="hexdump">
 ...
 c46e1f5b0ef7a483e71666d208004500   .n.[......f...E.
 00490000400040066951c0a801ed2248   .I..@.@.iQ...."H
@@ -148,8 +148,7 @@ ec80faab0016cb516b665e27db0c8018   .......Qkf^'....
 682e636f6d2c65636473612d73686132   h.com,ecdsa-sha2
 2d6e697374703338342d636572742d76   -nistp384-cert-v
 ...
-     
-  </pre>
+</pre>
           </div>
   
   
@@ -158,50 +157,54 @@ ec80faab0016cb516b665e27db0c8018   .......Qkf^'....
         </p>
   
         <div style="text-align:center">
-  <pre class="hexdump">
-  21e083638806bcc017c75975da647ac9  |!..c......Yu.dz.|
-  f8e055dc960f941790b1c6ef1486bfb1  |..U.............|
-  77133cb2a45964f1be7443067bdf31d6  |w.<..Yd..tC.{.1.|
-  6cc9c0aef936b0a79fc31727611d3192  |l....6.....'a.1.|
-  3f3e043be992ebdc9d198886655faeff  |?>.;........e_..|
-  3d47b78b33a0d8949559e3c20525fa8f  |=G..3....Y...%..|
-  a8f7d74945f1a4b7e7dcea68734f3be6  |...IE......hsO;.|
-  61815e79c9b0c96ccefa35e28773cd0b  |a.^y...l..5..s..|
-  19bddf1f792b7a5c588306cbabad997b  |....y+z\X......{|
-  66973ba2be2d2ae823c2b335a13f87e7  |f.;..-*.#..5.?..|
-  99307e7336db07d32030f4bbd1449e63  |.0~s6... 0...D.c|
-  3c09e05a034f8fa4281ff7eaf7b91728  |<..Z.O..(......(|
-  2ecc0ca6957a9903795fe37b694e8b24  |.....z..y_.{iN.$|
-  78770095397dea33e641873ca9cced3b  |xw..9}.3.A.<...;|
-  495f44a2c950166221e3f9926e417905  |I_D..P.b!...nAy.|
-  7ee840b5ab04f988aa5e2a85a0e3f60d  |~.@......^*.....|
-  e182e6c8ee1c748baf19067c747fcc9c  |......t....|t...|
-  0a38531fc64cf06b2ff68cecafe8075d  |.8S..L.k/......]|
-  6f48c479a237eff8b040ee8312ecea9c  |oH.y.7...@......|
-  b7bbd0d78286537aecfee1ac6bd24485  |......Sz....k.D.|
-  05c0fe53bd73b9628f3b80e5dead47b9  |...S.s.b.;....G.|
-  d3e1951dd79ea6c940ca4d98e2f7bc87  |........@.M.....|
-  f8c6f18841763140fa31d8a6dc5cd1e5  |....Av1@.1...\..|
-  53171b9b54803882c19bd53b6833adc2  |S...T.8....;h3..|
-  138fcb94cbc98baa0af3dd662eabfe1c  |...........f....|
-  57c5d93b273605464e042d1075bfd637  |W..;'6.FN.-.u..7|
-  1ead015dc94d99b65f77e7eb6a2eb786  |...].M.._w..j...|
-  cd5dcedd4b86961535e46cb6a6618bbf  |.]..K...5.l..a..|
-  2234f63837d42a6d90e25fc11f835d8a  |"4.87.*m.._...].|
-  dfcec93fc1fa052427a4c78bf6a72008  |...?...$'..... .|
-  9fd8c030820b07659570620f0ad0f2e9  |...0...e.pb.....|
-  1110741fd6f7df137e32e3a868fcc7e4  |..t.....~2..h...|
-  </pre>
+<pre class="hexdump">
+21e083638806bcc017c75975da647ac9  |!..c......Yu.dz.|
+f8e055dc960f941790b1c6ef1486bfb1  |..U.............|
+77133cb2a45964f1be7443067bdf31d6  |w.<..Yd..tC.{.1.|
+6cc9c0aef936b0a79fc31727611d3192  |l....6.....'a.1.|
+3f3e043be992ebdc9d198886655faeff  |?>.;........e_..|
+3d47b78b33a0d8949559e3c20525fa8f  |=G..3....Y...%..|
+a8f7d74945f1a4b7e7dcea68734f3be6  |...IE......hsO;.|
+61815e79c9b0c96ccefa35e28773cd0b  |a.^y...l..5..s..|
+19bddf1f792b7a5c588306cbabad997b  |....y+z\X......{|
+66973ba2be2d2ae823c2b335a13f87e7  |f.;..-*.#..5.?..|
+99307e7336db07d32030f4bbd1449e63  |.0~s6... 0...D.c|
+3c09e05a034f8fa4281ff7eaf7b91728  |<..Z.O..(......(|
+2ecc0ca6957a9903795fe37b694e8b24  |.....z..y_.{iN.$|
+78770095397dea33e641873ca9cced3b  |xw..9}.3.A.<...;|
+495f44a2c950166221e3f9926e417905  |I_D..P.b!...nAy.|
+7ee840b5ab04f988aa5e2a85a0e3f60d  |~.@......^*.....|
+e182e6c8ee1c748baf19067c747fcc9c  |......t....|t...|
+0a38531fc64cf06b2ff68cecafe8075d  |.8S..L.k/......]|
+6f48c479a237eff8b040ee8312ecea9c  |oH.y.7...@......|
+b7bbd0d78286537aecfee1ac6bd24485  |......Sz....k.D.|
+05c0fe53bd73b9628f3b80e5dead47b9  |...S.s.b.;....G.|
+d3e1951dd79ea6c940ca4d98e2f7bc87  |........@.M.....|
+f8c6f18841763140fa31d8a6dc5cd1e5  |....Av1@.1...\..|
+53171b9b54803882c19bd53b6833adc2  |S...T.8....;h3..|
+138fcb94cbc98baa0af3dd662eabfe1c  |...........f....|
+57c5d93b273605464e042d1075bfd637  |W..;'6.FN.-.u..7|
+1ead015dc94d99b65f77e7eb6a2eb786  |...].M.._w..j...|
+cd5dcedd4b86961535e46cb6a6618bbf  |.]..K...5.l..a..|
+2234f63837d42a6d90e25fc11f835d8a  |"4.87.*m.._...].|
+dfcec93fc1fa052427a4c78bf6a72008  |...?...$'..... .|
+9fd8c030820b07659570620f0ad0f2e9  |...0...e.pb.....|
+1110741fd6f7df137e32e3a868fcc7e4  |..t.....~2..h...|
+</pre>
         </div>
   
-        
       <p>
         Here's a detailed summary of <code class="tt">saltunnel</code>'s security features:
       </p>
 
       <dl class="bulleted-definition-list">
 
-        <dt>Denial-of-Service Protection</dt>
+        <dt>Confidentiality and Integrity</dt>
+        <dd>
+          The saltunnel protocol uses salsa20+poly1305 as its primary symmetric cipher, which provides confidentiality and integrity.
+        </dd>
+
+        <dt>Denial-of-Service Prevention</dt>
         <dd>
           <code class="tt">saltunnel</code> servers have denial-of-service protection; about as much as is possible for a TCP server. An attacker attempting to overload a <code class="tt">saltunnel</code> server instance will find that the most cost-effective attacks are (probably) reduced to exploiting the well-known shortcomings of TCP itself.
         </dd>
@@ -223,20 +226,21 @@ ec80faab0016cb516b665e27db0c8018   .......Qkf^'....
         
         <dt>Post-Quantum Security</dt>
         <dd>
-          The protocol is also immune to quantum computing attacks, because its security relies on 256-bit symmetric-key cryptography. (Of which, the best attack known to be possible by quantum computers is Grover's algorithm, which reduces the security level to 128 bits.) 
+          The protocol is also immune to quantum computing attacks, because its security relies on 256-bit symmetric-key cryptography. (Of which, the best attack known to be possible by quantum computers is <a href="https://en.wikipedia.org/wiki/Grover%27s_algorithm">Grover's algorithm</a>, which reduces the security level to 128 bits.) 
           The catch, of course, is that as a prerequisite to using <code class="tt">saltunnel</code>, the key must be (somehow) shared securely between parties&mdash;a process which is famously difficult to do, especially in a post-quantum-secure way.
         </dd>
         
-        <dt>Uniform Randomness</dt>
+        <dt>Uniform Random TCP Data</dt>
         <dd>
-          An attacker who eavesdrops on a <code class="tt">saltunnel</code> connection will only see a TCP connection with same-sized chunks  of uniform random data. There are no protocol header magic bytes or patterns within any given chunk of data.  This complicates an attacker's ability to track/fingerprint users, and makes it difficult to write analysis tools that detect/censor the <code class="tt">saltunnel</code> protocol. (Though, patterns may still be available through timing analysis.)
+          An attacker who eavesdrops on a <code class="tt">saltunnel</code> connection will only see a TCP connection with same-sized chunks  of uniform random data. There are no protocol header magic bytes or patterns within any given chunk of data.  This complicates an attacker's ability to track/fingerprint users, and makes it difficult to write analysis tools that detect/censor the <code class="tt">saltunnel</code> protocol. (Obviously, tracking can still be done at the IP layer, and patterns may still be available through timing analysis.)
         </dd>
 
       </dl>
         
       <p>There are a few shortcomings of <code class="tt">saltunnel</code>:
         <ul class="spaced-bulleted-list">
-          <li>As has already been stated, both the client and server must both be pre-configured with the same 32-byte (256-bit) shared key&mdash;distributing this key in a secure manner is left up to the user. </li>
+          <li>As has already been stated, both the client and server must both be pre-configured with the same 32-byte (256-bit) shared key&mdash;distributing this key in a secure manner is left up to the user.</li>
+          <li>Because <code class="tt">saltunnel</code> was designed to intercept TCP connections of existing applications, it works with TCP sockets. TCP server sockets are often difficult to restrict access to. When you run <code class="tt">saltunnel client</code> on a machine, be aware that you are opening a local port which any program on that machine could potentially connect to.</li>
           <li>When a saltunnel client or server is running, it listens on a single <i>ip:port</i> pair, and forwards connections to a single <i>ip:port</i> pair. The effect is that a separate tunnel must be opened for each destination port. </li>
           <li>Tunnels do not multiplex TCP connections. Each connection request into a tunnel results in a separate, secure connection which is used to communicate with the other peer. The effect is that, while all payload data is encrypted/authenticated, a network eavesdropper can easily determine when new TCP connections start and finish.</li>
         </p>
