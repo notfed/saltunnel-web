@@ -1,19 +1,6 @@
-<HTML><HEAD><TITLE>Manpage of saltunnel-client</TITLE>
+<HTML><HEAD><TITLE>saltunnel(1)</TITLE>
 </HEAD><BODY>
-<H1>saltunnel-client</H1>
-Section: saltunnel (1)<BR>Updated: May 2020<BR>
-<HR>
-<A NAME="index">&nbsp;</A><H2>Index</H2>
-<DL>
-<DT><A HREF="#lbAB">NAME</A><DD>
-<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
-<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
-<DT><A HREF="#lbAE">EXAMPLES</A><DD>
-<DT><A HREF="#lbAF">EXIT CODE</A><DD>
-<DT><A HREF="#lbAG">CRYPTOGRAPHY</A><DD>
-<DT><A HREF="#lbAH">AUTHOR</A><DD>
-</DL>
-<HR>
+<H1>saltunnel(1)</H1>
 
 <P>
 
@@ -22,23 +9,35 @@ Section: saltunnel (1)<BR>Updated: May 2020<BR>
 
 <P>
 
-<B>saltunnel-client</B>, <B>saltunnel-server</B>  - establish a cryptographically secure TCP tunnel
+<B>saltunnel</B> - a cryptographically secure TCP tunnel
 <P>
 <A NAME="lbAC">&nbsp;</A>
 <H2>SYNOPSIS</H2>
 
 <P>
 
-saltunnel-client [<B>--version</B>] [<B>-t</B> &lt;<I>timeout</I>&gt;] [<B>-m</B> &lt;<I>maxconns</I>&gt;] <B>-k</B> &lt;<I>keyfile</I>&gt; &lt;<I>fromip</I>&gt;:&lt;<I>fromport</I>&gt; &lt;<I>toip</I>&gt;:&lt;<I>toport</I>&gt;
+saltunnel client [<B>--version</B>] [<B>-t</B> &lt;<I>timeout</I>&gt;] [<B>-m</B> &lt;<I>maxconns</I>&gt;] <B>-k</B> &lt;<I>keyfile</I>&gt; &lt;<I>fromip</I>&gt;:&lt;<I>fromport</I>&gt; &lt;<I>toip</I>&gt;:&lt;<I>toport</I>&gt;
 <P>
-saltunnel-server [<B>--version</B>] [<B>-t</B> &lt;<I>timeout</I>&gt;] [<B>-m</B> &lt;<I>maxconns</I>&gt;] <B>-k</B> &lt;<I>keyfile</I>&gt; &lt;<I>fromip</I>&gt;:&lt;<I>fromport</I>&gt; &lt;<I>toip</I>&gt;:&lt;<I>toport</I>&gt;
+saltunnel server [<B>--version</B>] [<B>-t</B> &lt;<I>timeout</I>&gt;] [<B>-m</B> &lt;<I>maxconns</I>&gt;] <B>-k</B> &lt;<I>keyfile</I>&gt; &lt;<I>fromip</I>&gt;:&lt;<I>fromport</I>&gt; &lt;<I>toip</I>&gt;:&lt;<I>toport</I>&gt;
+<P>
+saltunnel key generate &lt;<I>keyfile</I>&gt;
+<P>
+saltunnel key import &lt;<I>keyfile</I>&gt;
+<P>
+saltunnel key export &lt;<I>keyfile</I>&gt;
 <P>
 <A NAME="lbAD">&nbsp;</A>
 <H2>DESCRIPTION</H2>
 
 <P>
 
-The <B>saltunnel-client</B> and <B>saltunnel-server</B> programs are used in conjunction to establish a difficult-to-censor, cryptographically secure TCP tunnel using symmetric key cryptography.  This allows one to augment a normally-insecure TCP session with state-of-the-art security, with minimal hassle and minimal impact on performance. 
+The <B>saltunnel client</B> and <B>saltunnel server</B> commands are used in conjunction to establish a cryptographically secure TCP tunnel using symmetric key cryptography.  This allows one to augment a normally-insecure TCP session with state-of-the-art security, with minimal hassle and minimal impact on performance. 
+<P>
+The <B>saltunnel key generate</B> command generates a new shared long-term key and places it into a file. This command is a simply convenience function; this step could be done many other ways. For example, it is equivalent to &quot;cat /dev/urandom | head -c 32 &gt; keyfile&quot;.
+<P>
+Another way to create a key is with <B>saltunnel key import</B>, which, instead of generating a random key, reads a 64-character hexadecimal string from standard input, and writes the 32-byte binary value of this string to &lt;<I>keyfile</I>&gt;.
+<P>
+The <B>saltunnel key export</B> command reads a 32-byte &lt;<I>keyfile</I>&gt; and outputs its value in hexadecimal.
 <P>
 The following options are available:
 <P>
@@ -68,16 +67,16 @@ Specify the path to the shared long-term key file. This file must be 32-bytes, a
 <P>
 <BR>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<I>fromip</I>&gt;:&lt;<I>fromport</I>&gt;
 <DL COMPACT><DT><DD>
-The <B>ip:port</B> pair identifying the source address to listen for incoming TCP connections. (For <B>saltunnel-client</B> this is data arrives unencrypted; for <B>saltunnel-server</B> it arrives encrypted.)
+The <B>ip:port</B> pair identifying the source address to listen for incoming TCP connections. (For <B>saltunnel client</B> this is data arrives unencrypted; for <B>saltunnel server</B> it arrives encrypted.)
 </DL>
 
 <P>
 <BR>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<I>toip</I>&gt;:&lt;<I>toport</I>&gt;
 <DL COMPACT><DT><DD>
-The <I>ip:port</I> pair identifying the destination address to connect to for outgoing (encrypted) TCP connections. (For <B>saltunnel-client</B> this is data is sent encrypted; for <B>saltunnel-server</B> it is sent unencrypted.)
+The <B>ip:port</B> pair identifying the destination address to connect to for outgoing (encrypted) TCP connections. (For <B>saltunnel client</B> this is data is sent encrypted; for <B>saltunnel server</B> it is sent unencrypted.)
+<BR>&nbsp;
 </DL>
 
-<P>
 <P>
 <A NAME="lbAE">&nbsp;</A>
 <H2>EXAMPLES</H2>
@@ -93,16 +92,16 @@ So, on ComputerA, generate a key:
 mkdir ~/.saltunnel
 <BR>
 
-cat /dev/urandom | head -c 32 &gt; ~/.saltunnel/k
+saltunnel key generate ~/.saltunnel/k
 </DL>
 
 <P>
-You'll then need to securely copy this to ComputerB.  (Doing this step securely is critical, but <B>saltunnel</B> isn't designed to help with this, so we will hand-wave this step. Fortunately, you'll only need to do this once.)
+You'll then need to securely copy this to ComputerB.  Doing this step securely is critical, but <B>saltunnel</B> isn't designed to help with this, so we will hand-wave this step. If you're okay with manually reading and re-typing the hexadecimal value of the key, you may run <B>saltunnel key export</B> on one computer and <B>saltunnel key import</B> on the other.
 <P>
 Next, you can set up the client-side of a tunnel. On ComputerA, you run:
 <P>
 <DL COMPACT><DT><DD>
-saltunnel-client -k ~/.saltunnel/k 127.0.0.1:8080 computer-a:30000
+saltunnel client -k ~/.saltunnel/k 127.0.0.1:8080 computer-a:30000
 </DL>
 
 <P>
@@ -113,7 +112,7 @@ After running this, any TCP connections made from ComputerA to IP address 127.0.
 But, you'll still need to set up the server-side of the tunnel.  On ComputerB, you run:
 <P>
 <DL COMPACT><DT><DD>
-saltunnel-server -k ~/.saltunnel/k 0.0.0.0:30000 127.0.0.1:8080
+saltunnel server -k ~/.saltunnel/k 0.0.0.0:30000 127.0.0.1:8080
 </DL>
 
 <P>
@@ -126,13 +125,13 @@ Now that both ends of the tunnel are initialized, ComputerA can securely communi
 
 <P>
 
-Normally, <B>saltunnel-client</B> and <B>saltunnel-server</B> do not exit. (They will both continue to listen for connections until terminated.)
+Normally, <B>saltunnel client</B> and <B>saltunnel server</B> do not exit. (They will both continue to listen for connections until terminated.) All other commands will exit with 0 on success.
 <P>
 
-If invalid arguments are given, <B>saltunnel-client</B> and <B>saltunnel-server</B> will with <B>2</B>.
+If invalid arguments are given, <B>saltunnel</B> will exit with code <B>2</B>.
 <P>
 
-If an error occurs, <B>saltunnel-client</B> and <B>saltunnel-server</B> will exit with <B>1</B>.
+If an error occurs, <B>saltunnel</B> will exit with code <B>1</B>.
 <A NAME="lbAG">&nbsp;</A>
 <H2>CRYPTOGRAPHY</H2>
 
@@ -141,55 +140,31 @@ If an error occurs, <B>saltunnel-client</B> and <B>saltunnel-server</B> will exi
 The <B>saltunnel</B> programs and the protocol used by <B>saltunnel</B> provide the following features:
 <P>
 <DL COMPACT>
-<DT>&bull;<DD>
+<DT><DD>
 Confidentiality and Integrity
 <P>
 <DL COMPACT><DT><DD>
-The <B>saltunnel</B> protocol uses chacha20+poly1305 as its primary symmetric cipher, which provides confidentiality and integrity. 
+The <B>saltunnel</B> protocol uses salsa20+poly1305 as its primary symmetric cipher, which provides confidentiality and integrity. 
 </DL>
 
 <P>
-<DT>&bull;<DD>
+<DT><DD>
 Denial-of-Service Protection
 <P>
 <DL COMPACT><DT><DD>
-Additionally, it has considerable denial-of-service protection: an attacker attempting to overload a <B>saltunnel-server</B> instance will find that his/her most cost-effective attacks are (probably) reduced to exploiting the well-known shortcomings of TCP itself.
+<B>saltunnel</B> servers have denial-of-service protection; about as much as is possible for a TCP server. An attacker attempting to overload a <B>saltunnel</B> server instance will find that the most cost-effective attacks are (probably) reduced to exploiting the well-known shortcomings of TCP itself.
 </DL>
 
 <P>
-<DT>&bull;<DD>
+<DT><DD>
 Forward Secrecy
 <P>
 <DL COMPACT><DT><DD>
-Forward secrecy is also ensured: after a TCP connection terminates, the ephemeral keys which were used to encrypt that connection are permanently erased. This means it is impossible for even owners of the original shared key to retroactively decrypt it. 
+Forward secrecy ensures that it is impossible to retroactively decrypt data from a past connection, even if, at some point in the future, the long-term shared symmetric key is compromised. Despite using a symmetric-key protocol for its initiating handshake, <B>saltunnel</B> performs a Diffie-Hellman exchange to obtain an ephemeral session key, which is then used for the remainder of the TCP connection. When a connection terminates, the ephemeral keys which were used to encrypt that connection are permanently erased. 
 </DL>
 
 <P>
-<DT>&bull;<DD>
-Message-Length Quantization
-<P>
-<DL COMPACT><DT><DD>
-Data is sent over the network in chunks of 512 bytes. If one computer sends, for example, 7 bytes, it will arrive as a 512-byte chunk on the other computer. This greatly reduces the amount of information which can be inferred from network analysis.
-</DL>
-
-<P>
-<DT>&bull;<DD>
-Steganography
-<P>
-<DL COMPACT><DT><DD>
-The protocol is steganographic-by-randomness, in that the entire protocol is indistinguishable from random: if someone attempts to eavesdrop on the conversation, they will be unable to detect any (for example) protocol header magic bytes or patterns in the data (apart from traffic analysis). 
-</DL>
-
-<P>
-<DT>&bull;<DD>
-Post-Quantum Security
-<P>
-<DL COMPACT><DT><DD>
-The protocol is also immune to quantum computing attacks, because its security relies on symmetric cryptography. The catch is, however, that a prerequisite is that the key must be shared securely between parties--a process which is historically difficult to do in a post-quantum-secure way.
-</DL>
-
-<P>
-<DT>&bull;<DD>
+<DT><DD>
 Key/Data Safety
 <P>
 <DL COMPACT><DT><DD>
@@ -197,14 +172,39 @@ Both programs use <B>mlock</B> to pin all keys and plaintext to memory, so that 
 </DL>
 
 <P>
-For more information, see &lt;<A HREF="https://identity.pub/saltunnel">https://identity.pub/saltunnel</A>&gt;.
+<DT><DD>
+Message-Length Quantization
 <P>
-<P>
+<DL COMPACT><DT><DD>
+Data is sent over the network in chunks of 512 bytes. If one computer sends, for example, 7 bytes, it will arrive as a 512-byte chunk on the other computer. This greatly reduces the amount of information which can be inferred from network analysis.
 </DL>
-<A NAME="lbAH">&nbsp;</A>
+
+<P>
+<DT><DD>
+Post-Quantum Security
+<P>
+<DL COMPACT><DT><DD>
+The protocol is also immune to quantum computing attacks, because its security relies on 256-bit symmetric-key cryptography. (Of which, the best attack known to be possible by quantum computers is Grover's algorithm, which reduces the security level to 128 bits.) 
+The catch, of course, is that as a prerequisite to using <B>saltunnel</B>, the key must be (somehow) shared securely between parties---a process which is famously difficult to do, especially in a post-quantum-secure way.
+</DL>
+
+<P>
+<DT><DD>
+Uniform Random TCP Data
+<P>
+<DL COMPACT><DT><DD>
+An attacker who eavesdrops on a <B>saltunnel</B> connection will only see a TCP connection with same-sized chunks  of uniform random data. There are no protocol header magic bytes or patterns within any given chunk of data.  This complicates an attacker's ability to track/fingerprint users, and makes it difficult to write analysis tools that detect/censor the <B>saltunnel</B> protocol. (Though, patterns may still be available through timing analysis.)
+</DL>
+</DL>
+
+<H2>WEBSITE</H2>
+<P>
+For more information, see &lt;<A HREF="https://saltunnel.io">https://saltunnel.io</A>&gt;.
+
 <H2>AUTHOR</H2>
 
 Jay Sullivan &lt;<A HREF="mailto:jay@identity.pub">jay@identity.pub</A>&gt;
 <P>
+
 </BODY>
 </HTML>
